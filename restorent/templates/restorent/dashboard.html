@@ -1,0 +1,153 @@
+{% extends "restorent/base.html" %}
+
+{% block title %}
+<title> Dashboard</title>
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="container-xxl py-5 bg-grey dashboard">
+    <div class="px-3">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h5 class="section-title ff-secondary text-center text-primary fw-normal">Main Dashboard</h5>
+            <h4 class="mb-5">All Details</h4>
+        </div>
+        <div class="row">
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs fw-bold text-success text-uppercase mb-1">
+                                    Table Orders</div>
+                                <div class="h4 mb-0 fw-black text-gray-800" id="table-orders">0</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-utensils fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs fw-bold text-primary-custm text-uppercase mb-1">
+                                    Delivery Orders</div>
+                                <div class="h4 mb-0 fw-black text-gray-800" id="delivery-orders">0</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-motorcycle fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs fw-bold text-info text-uppercase mb-1">
+                                    Total Payments</div>
+                                <div class="h4 mb-0 fw-black text-gray-800">
+                                    <span id="total-payment">
+                                        0
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-rupee-sign fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs fw-bold text-warning text-uppercase mb-1">
+                                    Running Orders
+                                </div>
+                                <div class="h4 mb-0 fw-black text-gray-800" id="vacent-table">10</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-chair fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-xl-8 col-md-12 col-12">
+                <h6 class="mb-3">
+                    Total Revenue :- <span id="running-year" style="cursor: pointer;" class="dropdown-toggle text-primary"
+                        data-bs-toggle="dropdown">{{current_year}}</span>
+                        <div class="dropdown-menu m-0" id="year-dropdown">
+
+                        </div>
+                </h6>
+                <div class="card shadow h-100 py-2">
+                    <div class="card-body">
+                        <!-- Canvas Element for Chart -->
+                        <canvas id="revenueChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-md-12 col-12">
+                <h6 class="mb-3">
+                    Table Orders vs Delivery Orders
+                </h6>
+                <div class="card shadow h-100 py-2">
+                    <div class="card-body">
+                        <!-- Canvas Element for Chart -->
+                        <canvas id="orderComparisonChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<!-- Chart.js Library -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $('#daterange').daterangepicker({
+            locale: {
+                format: 'DD/MMM/YYYY'
+            },
+            startDate: moment(), // Set start date to today
+            endDate: moment(),   // Set end date to today
+            showDropdowns: true,
+            opens: 'left',
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        });
+    });
+    
+    
+
+
+</script>
+
+<script src="/static/restorent/dashboard.js"></script>
+
+{% endblock %}

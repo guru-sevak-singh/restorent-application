@@ -1,0 +1,106 @@
+{% extends "restorent/base.html" %}
+
+{% block title %}
+
+<title>
+    Add Sitting Area
+</title>
+
+{% endblock %}
+
+{% block content %}
+
+<!-- Add Sitting Area Form Starts Here -->
+
+<!-- Modal -->
+<!-- Area form -->
+<div class="modal fade" id="sittingAreaName" tabindex="-1" role="dialog" aria-labelledby="sittingAreaNameTitle"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Area</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <form method="post" action="{% url 'restorent:add_area' %}">
+                <div class="modal-body">
+                    <div>
+
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="area_name" class="col-form-label">Name For Sitting Area:</label>
+                            <input type="text" class="form-control" id="area_name" name="area_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="no_of_tables" class="col-form-label">Enter Number Of Tables <span id="work-message"></span>:</label>
+                            <input type="number" min="1" class="form-control" id="no_of_tables" name="no_of_tables">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" id="add-submit" name="work" value="add_area" class="btn btn-primary">Add Area</button>
+                    <button type="submit" id="remove-submit" name="work" value="remove_table" class="btn btn-danger">Remove Tables</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Table Start Here -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h5 class="section-title ff-secondary text-center text-primary fw-normal">Sitting Area</h5>
+            <h1 class="mb-5">Create Your Sitting Area here </h1>
+        </div>
+        {% for floor in floors %}
+        <div class="card rounded-2 mt-5">
+            <div class="card-body">
+                <h3 class="floor_id" style="display: none;">
+                    {{ floor.id }}
+                </h3>
+                <h5 class="mb-4">
+                    {{ floor }}
+                </h5>
+                <div class="row g-3">
+                    {% for table in floor.table_set.all %}
+                    <div class="col-4 col-lg-2 col-md-2">
+                        <a class="table-no-to-order" href="#">
+                            {{ forloop.counter }}
+                        </a>
+                    </div>
+                    {% endfor %}
+
+                    <div class="col-4 col-lg-2 col-md-2">
+                        <a class="table-no-to-order bg-warning text-white border-white" href="{% url 'restorent:add_table' floor.id %}">
+                            +
+                        </a>
+                    </div>
+
+                    <div class="col-4 col-lg-2 col-md-2">
+                        <button class="table-no-to-order btn-danger text-white border-white" onclick="removeTable('{{floor.pk}}', '{{floor}}')">
+                            Remove Tables
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        {% endfor %}
+        <button class="btn btn-primary checkout-btn" onclick="OpenAddAreaPopUp()">Add
+            Area</button>
+
+    </div>
+</div>
+<!-- Table End Here -->
+
+<script src="/static/restorent/add_sitting_area.js"></script>
+
+{% endblock %}

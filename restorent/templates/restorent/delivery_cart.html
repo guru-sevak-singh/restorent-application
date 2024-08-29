@@ -1,0 +1,70 @@
+{% extends "restorent/base.html" %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block content %}
+
+<form action="#" method="post" style="display: none;">
+    {% csrf_token %}
+    <textarea name="user_detail" id="user-detail"></textarea>
+    <textarea name="order_data" id="order_data"></textarea>
+    <button type="submit" id="order_submit">
+        submit
+    </button>
+</form>
+
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h5 class="section-title ff-secondary text-center text-primary fw-normal">Your Cart</h5>
+            <h1 class="mb-2">Our Delicious Food Items</h1>
+            <h5 class="tableNo mb-5">
+                Selected Table : <span class="text-primary" id="table-name">Home Delivery</span>
+            </h5>
+        </div>
+        <div class="card rounded-2">
+            <div class="card-body">
+                <div class="row" id="cart-items">
+
+                </div>
+            </div>
+        </div>
+        <div class="total-section" id="cart-area">
+            <div class="d-flex justify-content-between mt-3">
+                <p class="text-muted">Sub Total</p>
+                <h6><span class="me-1-cust">₹</span><span id="cart-amount" class="amounts">0</span></h6>
+            </div>
+
+            {% for tax in restorent.tax_set.all %}
+            <div class="d-flex justify-content-between">
+                <p class="text-muted">{{tax.name}} (<span class="tax-perscantage">{{tax.tax_perscentage}}</span>%)</p>
+                <h6 class="amounts tax-amount">2</h6>
+            </div>
+            {% endfor %}
+
+            <div class="d-flex justify-content-between">
+                <p class="text-muted">Total</p>
+                <h6><span class="me-1-cust">₹</span>
+                    <span id="total-amount">
+                        0
+                    </span>
+                </h6>
+            </div>
+        </div>
+        <div class="row align-items-center text-center justify-content-center">
+            <div class="col-lg-12 col-12 col-md-12">
+                <button class="btn btn-primary checkout-btn" onclick="createOrder()">Confirm</button>
+            </div>
+        </div>
+        
+
+    </div>
+</div>
+
+
+
+<script src="/static/restorent/cart.js"></script>
+
+{% endblock %}

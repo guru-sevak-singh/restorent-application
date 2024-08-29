@@ -1,0 +1,197 @@
+{% extends 'restorent/base.html' %}
+
+{% block title %}
+<title>
+    Order History
+</title>
+{% endblock %}
+
+{% block content %}
+
+<!-- Modal -->
+<div class="modal fade" id="deleteOrderPopUp" tabindex="-1" aria-labelledby="deleteOrderPopUpLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="{% url 'restorent:delete_order' %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteOrderPopUpLabel">Add Adjustment</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-form-label">
+                            Do You Want To Delete This Order !
+                        </label>
+                        <input style="display: none;" type="number" class="form-control" id="order-id" name="order-id" value="">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Order History Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h5 class="section-title ff-secondary text-center text-primary fw-normal">Order History</h5>
+            <h1 class="mb-5">Your Previous Orders</h1>
+        </div>
+        <!-- date range picker start -->
+        <form>
+            <div class="row mb-4">
+                <div class="col-md-10 col-lg-6 col-12">
+                    <div class="row align-items-center g-3">
+                        <div class="col-lg-2 col-md-3 col-12">
+                            <label for="daterange" class="fw-bold">Filter Result</label>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon1"> <i class="fa fa-calendar"></i></span>
+                                <input type="text" id="daterange" class="form-control br-2" name="daterange"
+                                    aria-label="daterange" aria-describedby="basic-addon1">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-12">
+
+                            <button type="submit" class="btn btn-primary"> Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- date range picker end -->
+        <div id="order-list" class="row">
+
+
+            <div class="container-fluid">
+
+
+                <div class="table-responsive">
+                    <table class="table custom-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    S No.
+
+                                </th>
+                                <th scope="col">
+                                    Time
+                                </th>
+                                <th scope="col" class="text-end">
+                                    Amount
+                                </th>
+                                <th scope="col" class="text-end">
+                                    Quantity
+                                </th>
+                                <th>
+                                    Order Type
+                                </th>
+                                <th scope="col">
+                                    Payment Status
+                                </th>
+
+                                <th scope="col" colspan="2">
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <th scope="row">
+                                    {{forloop.counter}}
+                                </th>
+                                <td>
+                                    {{order.start_time}}
+                                </td>
+                                <td class="text-end">
+                                    ₹ {{order.order_amount}}
+                                </td>
+                                <td class="text-end">
+                                    {{order.items.count}}
+                                </td>
+                                <td>
+                                    {% if order.normal_table %}
+                                        In-House
+                                    {% else %}
+                                        Delivery
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if order.end_time == None %}
+                                    <i class="fa fas fa-clock text-primary mb-0 me-2"></i>Pending</p>
+                                    {% else %}
+                                    <i class="fa fas fa-check-circle text-success mb-0 me-1"></i>
+                                    Completed
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <a href="{% url 'restorent:order_profile' order.id %}"> <i
+                                            class="fas fa-eye text-primary"></i></a>
+                                </td>
+                                <td>
+                                    <a href="#" onclick="OpenPopUp('{{order.pk}}')">
+                                        <i class="fa fa-trash-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+{{ start_date|json_script:"start-date"}}
+{{ end_date|json_script:"end-date"}}
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+    const start_date = JSON.parse(document.getElementById('start-date').innerText);
+    const end_date = JSON.parse(document.getElementById('end-date').innerText)
+    
+
+    $(document).ready(function () {
+        $('#daterange').daterangepicker({
+            locale: {
+                format: 'DD/MMM/YYYY'
+            },
+            startDate: new Date(start_date), // Set start date to today
+            endDate: new Date(end_date),   // Set end date to today
+            showDropdowns: true,
+            opens: 'right',
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        });
+    });
+
+    function OpenPopUp(id) {
+        $("#deleteOrderPopUp").modal('show');
+        document.getElementById('order-id').value = id;
+    }
+
+</script>
+
+<!-- Order History End -->
+{% endblock %}

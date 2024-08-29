@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>
+        Payment Added Successfully !
+    </title>
+
+
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <link href="/static/assets/images/favicon.ico" rel="icon">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&family=Pacifico&display=swap"
+        rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link href="/static/assets/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="/static/assets/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="/static/assets/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <link href="/static/assets/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="/static/assets/css/style.css" rel="stylesheet">
+    <link href="/static/assets/css/custom.css" rel="stylesheet">
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #00aeef;
+        }
+
+        .container {
+            position: relative;
+        }
+
+        .animated-image {
+            position: relative;
+            animation: moveUp 5s forwards;
+        }
+
+        @keyframes moveUp {
+            0% {
+                top: 0;
+                opacity: 1;
+            }
+
+            100% {
+                top: -100vh;
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container text-center">
+        <img src="/static/assets/images/loader.gif" alt="Image" class="animated-image">
+        <h1 class="text-center">Payment Received successfully</h1>
+    </div>
+
+    <script>
+        // Define the Queue class
+        class Queue {
+            constructor() {
+                this.items = [];
+            }
+
+            enqueue(element) {
+                this.items.push(element);
+            }
+
+            dequeue() {
+                if (this.isEmpty()) {
+                    return undefined;
+                }
+                return this.items.shift();
+            }
+
+            isEmpty() {
+                return this.items.length === 0;
+            }
+        }
+
+        // Initialize a queue instance
+        var queue = new Queue();
+
+        // Function to create and enqueue audio elements
+        function playAudio() {
+            var audio = document.createElement('audio');
+            var source = document.createElement('source');
+            source.src = "https://www.dopagentsoftware.com/assets/sound/notification-v2.mp3";
+            audio.appendChild(source);
+
+            // Append the audio element to the body (or any other container)
+            document.body.appendChild(audio);
+
+            // Enqueue the audio element for playback
+            queue.enqueue(audio);
+        }
+
+        // Function to play audio notifications from the queue
+        setInterval(function () {
+            var audio = queue.dequeue();
+            if (audio !== undefined) {
+                audio.play().catch(function (error) {
+                    console.error("Audio play failed:", error);
+                });
+
+                // Remove the audio element after playback
+                setTimeout(function () {
+                    audio.remove();
+                }, 1000); // Duration of sound clip (adjust as necessary)
+            }
+        }, 300); // Check the queue every 300ms
+
+        // Example usage: Call playAudio() to add audio to the queue
+        playAudio(); // Call this whenever you want to play a notification sound
+
+    </script>
+</body>

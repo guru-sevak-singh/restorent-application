@@ -1,0 +1,391 @@
+{% extends "restorent/base.html" %}
+
+{% block title %}
+
+
+{% endblock %}
+
+{% block content %}
+
+<!-- Tabs Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h5 class="section-title ff-secondary text-center text-primary fw-normal">Order Summary</h5>
+            <h4 class="mb-5">Order Details</h4>
+        </div>
+        <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.1s"
+            style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+            <ul class="nav nav-pills d-inline-flex justify-content-center border-bottom mb-3" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3 active" id="order-tab"
+                        data-bs-toggle="tab" data-bs-target="#order" type="button" role="tab" aria-controls="order"
+                        aria-selected="true">
+
+                        <i class="far fa-bookmark fa-2x text-primary"></i>
+                        <div class="ps-3">
+                            <h6>Orders</h6>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="d-flex align-items-center text-start mx-3 pb-3" id="items-tab" data-bs-toggle="tab"
+                        data-bs-target="#items" type="button" role="tab" aria-controls="items" aria-selected="false">
+
+                        <i class="fas fa-list-ul fa-2x text-primary"></i>
+                        <div class="ps-3">
+                            <h6>Items</h6>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="d-flex align-items-center text-start mx-3 pb-3" id="payments-tab" data-bs-toggle="tab"
+                        data-bs-target="#payments" type="button" role="tab" aria-controls="payments"
+                        aria-selected="false">
+                        <i class="fa fa-credit-card fa-2x text-primary"></i>
+                        <div class="ps-3">
+                            <h6>Payments</h6>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-content" id="myTabContent">
+            <!-- Order Tab Start -->
+            <div class="tab-pane fade show active" id="order" role="tabpanel" aria-labelledby="order-tab">
+                <div class="card rounded-2 mt-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Order ID</p>
+                            <h6 class="total-amount">#{{order.id}}</h6>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Food Delivered Status.</p>
+                            <h6>
+                                {% if order.food_delivered %}
+                                <a href="#" id="delivery-status" class="text-dark dropdown-toggle"
+                                    data-bs-toggle="dropdown"><i
+                                        class="fa fas fa-check-circle text-success mb-0 me-1"></i>Delivery Done</a>
+                                <div class="dropdown-menu m-0">
+                                    <a href="#" id="food-delivery-done" class="dropdown-item"><i
+                                            class="fa fas fa-check-circle text-success mb-0 me-1"></i>Order
+                                        Delivered</a>
+                                    <a href="#" id="food-delivery-pending" class="dropdown-item"><i
+                                            class="fa fas fa-clock text-danger mb-0 me-1"></i>Delivery Pending</a>
+                                    {% else %}
+                                    <a href="#" id="delivery-status" class="text-dark dropdown-toggle"
+                                        data-bs-toggle="dropdown"><i
+                                            class="fa fas fa-clock text-danger mb-0 me-1"></i>Delivery Pending</a>
+                                    <div class="dropdown-menu m-0">
+                                        <a href="#" id="food-delivery-pending" class="dropdown-item"><i
+                                                class="fa fas fa-clock text-danger mb-0 me-1"></i>Delivery Pending</a>
+                                        <a href="#" id="food-delivery-done" class="dropdown-item"><i
+                                                class="fa fas fa-check-circle text-success mb-0 me-1"></i>Order
+                                            Delivered</a>
+                                    </div>
+                                    {% endif %}
+                            </h6>
+                        </div>
+
+
+
+                        {% if order.normal_table == False %}
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Delivery To</p>
+                            <h6>{{order.name}}</h6>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Address</p>
+                            <h6>{{order.address}}</h6>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Phone Number</p>
+                            <h6>{{ order.phone_number }}</h6>
+                        </div>
+
+                        {% else %}
+
+
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Table No.</p>
+                            <h6 id="table-name">{{order.table.floor}}-{{table_number}}</h6>
+                        </div>
+
+                        {% endif %}
+
+
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Order Date</p>
+                            <h6>{{order.start_time.date}}</h6>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Order Time</p>
+                            <h6>{{order.start_time.time}}</h6>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Payment Status</p>
+
+                            {% if order.end_time == None %}
+                            <h6>Pending</h6>
+                            {% else %}
+                            <h6>Done</h6>
+                            {% endif %}
+                        </div>
+                        {% if order.end_time == None %}
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Pending Amount</p>
+                            <h6 class="total-amount">₹ <span class="amount-with-tax"></span></h6>
+                        </div>
+                        {% else %}
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Paid Amount</p>
+                            <h6 class="total-amount">₹ {{order.payment.paid_amount}}</h6>
+                        </div>
+
+                        {% endif %}
+
+
+
+                    </div>
+                </div>
+            </div>
+            <!-- Order Tab End -->
+
+            <!-- Items Tab Start -->
+            <div class="tab-pane fade" id="items" role="tabpanel" aria-labelledby="items-tab">
+                <div class="card rounded-2 mt-4">
+                    <div class="card-body" id="order-items">
+                        {% for item in order.items.all %}
+                        <div class="row mb-2 order-item">
+                            <div class="col-8">
+                                <h6 class="d-flex align-items-center">
+                                    <span class="{{item.food_type}}-icon"></span>
+                                    <span class="ms-2">{{item.item_name}}</span>
+                                </h6>
+                                <p class="text-muted ms-4 ps-2" style="font-size: 0.85rem;">Quantity:
+                                    {{item.item_quantity}}</p>
+                            </div>
+                            <div class="col-4 text-end">
+                                <h6 class="price"><span class="me-1-cust">₹</span>{{item.order_price}}</h6>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        <!-- Repeat for other items -->
+                        <div class="d-flex justify-content-between mt-3">
+                            <p class="text-muted">Sub Total</p>
+                            <h6 class="total-amount"><span class="me-1-cust">₹</span><span
+                                    id="sub-amount">{{order.order_amount}}</span></h6>
+                        </div>
+
+                        {% for tax in order.restorent.tax_set.all %}
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">{{tax.name}} (<span
+                                    class="tax-perscantage">{{tax.tax_perscentage}}</span>%)</p>
+                            <h6 class="amounts">₹ <span class="tax-amount"></span></h6>
+                        </div>
+                        {% endfor %}
+
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Total</p>
+                            <h6 class="total-amount"><span class="me-1-cust">₹</span><span class="amount-with-tax">
+
+                                </span>
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Items Tab End -->
+
+            <!-- Payments Tab Start -->
+            <div class="tab-pane fade" id="payments" role="tabpanel" aria-labelledby="payments-tab">
+                <div class="card rounded-2 mt-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Payment Status</p>
+                            {% if order.end_time == None %}
+                            <h6 class="total-amount">
+                                <i class="fa fas fa-clock text-danger mb-0 me-1"></i>
+                                Pending
+                            </h6>
+                            {% else %}
+                            <h6 class="total-amount">
+                                <i class="fa fas fa-check-circle text-success mb-0 me-1"></i>
+                                Success
+                            </h6>
+                            {% endif %}
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Total Amount</p>
+                            <h6 class="total-amount">₹ <span class="amount-with-tax"></span></h6>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Adjustmented Amount</p>
+                            <h6 class="total-amount">₹
+                                <span id="adjustment-amount" data-bs-target="#adjustmentPopup"
+                                data-bs-toggle="modal" class="text-primary" style="cursor: pointer;">
+                                    {{ order.adjustment }}
+                                </span>
+
+                            </h6>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Pending Amount</p>
+                            <h6 class="total-amount">₹
+                                {% if order.payment %}
+                                <span id="panding-amount">
+                                    {{ order.pyament.adjustment }}
+                                </span>
+                                {% else %}
+                                <span id="panding-amount">0</span>
+                                {% endif %}
+                            </h6>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Paid Amount </p>
+                            <h6 class="total-amount">₹ {% if order.payment %}
+                                {{ order.payment.paid_amount }}
+                                {% else %}
+                                0
+                                {% endif %}
+                            </h6>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Payment Method</p>
+                            <h6 class="total-amount">
+                                {% if order.payment %}
+                                {{ order.payment.payment_method }}
+                                {% else %}
+                                <i class="fa fas fa-clock text-danger mb-0 me-1"></i>Payment
+                                Pending</p>
+                                {% endif %}
+                            </h6>
+                        </div>
+
+                        {% if order.payment %}
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Message</p>
+                            <h6 class="total-amount">
+                                {{order.payment.message}}
+                            </h6>
+                        </div>
+
+                        {% endif %}
+
+                        <div class="d-flex justify-content-center">
+                            {% if order.payment %}
+
+                            <div class="text-center mt-4 mx-2">
+                                <a class="btn btn-primary"
+                                    href="{% url 'restorent:delete_payment' order.payment.id %}">Delete Payment</a>
+                            </div>
+
+
+                            {% else %}
+
+                            <div class="text-center mt-4 mx-2">
+                                <button class="btn btn-primary" data-bs-target="#paymentPopup"
+                                    data-bs-toggle="modal">Add Payment</button>
+                            </div>
+
+                            {% endif %}
+
+                            <div class="text-center mt-4 mx-2">
+                                <a href="{% url 'restorent:show_qr' order.id %}" class="btn btn-primary">Show QR</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Repeat for other payments -->
+            </div>
+            <!-- Payments Tab End -->
+        </div>
+        <div class="row g-3">
+            <div class="container-fluid text-center pt-3">
+                <button class="btn btn-primary mx-2 mb-2" onclick="printKot()">Print KOT</button>
+                <button class="btn btn-primary mx-2 mb-2" onclick="printBill()">Print Bill</button>
+                <a href="{% url 'restorent:edit_order' order.pk %}" class="btn btn-primary mx-2 mb-2">Edit Order</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="paymentPopup" tabindex="-1" aria-labelledby="paymentPopupLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="paymentPopupLabel">Add Payment</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="bill_amount" class="col-form-label">Bill Amount:</label>
+                        <input type="number" readonly class="form-control" id="bill_amount" name="bill_amount">
+                    </div>
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label class="col-form-label">
+                            {{field.label}}
+                        </label>
+                        {{ field }}
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add
+                        Payment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if order.end_time == None %}
+<!-- Modal -->
+<div class="modal fade" id="adjustmentPopup" tabindex="-1" aria-labelledby="adjustmentPopupLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="{% url 'restorent:add_adjustment' order.id %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="adjustmentPopupLabel">Add Adjustment</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-form-label">
+                            Adjustment Amount
+                        </label>
+                        <input type="number" class="form-control" name="adjustment" value="{{order.adjustment}}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add
+                        Adjustment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+
+{{ order.pk|json_script:"order-id" }}
+
+<script src="/static/restorent/order_profile.js"></script>
+
+<!-- Tabs End -->
+{% endblock %}

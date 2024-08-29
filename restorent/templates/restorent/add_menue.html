@@ -1,0 +1,180 @@
+{% extends "restorent/base.html" %}
+
+{% block title %}
+<title>
+    Add Menu
+</title>
+{% endblock %}
+
+{% block content %}
+
+<!-- Add category -->
+<div class="modal fade" id="addcategory" tabindex="-1" role="dialog" aria-labelledby="addcategoryTitle"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            </div>
+            <form method="post" action="{% url 'restorent:add_category' %}">
+                <div class="modal-body">
+                    <div>
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="category_name" class="col-form-label">Name For Category:</label>
+                            <input type="text" class="form-control" id="category_name" name="category_name">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Add Item -->
+<div class="modal fade" id="addItem" tabindex="-1" role="dialog" aria-labelledby="addItemTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" id="item-form" enctype="multipart/form-data"
+                action="{% url 'restorent:add_food_item' %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addItemLabel">Edit Food Item</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label class="col-form-label">{{field.label}}</label>
+                        {{field}}
+                    </div>
+                    {% endfor %}
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Update Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Delete Item -->
+<div class="modal fade" id="deleteItem" tabindex="-1" role="dialog" aria-labelledby="deleteItemTitle"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" id="item-form" action="{% url 'restorent:delete_food_item' %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteItemLabel">Edit Food Item</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="col-form-label">Do You Want To Remove This Item From Your Restorent</label>
+                        <input type="text" name="pk" id="deleted-item-id">
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Main Content -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h5 class="section-title ff-secondary text-center text-primary fw-normal">Add Menu</h5>
+            <h1 class="mb-2">Our Delicious Food Items</h1>
+        </div>
+        <div class="row">
+            <div class="container">
+                {% for food_category in food_categories %}
+                <div class="card rounded-2 mt-5">
+                    <div class="card-body">
+
+                        <div class="row align-items-center text-align-center mb-5">
+                            <div class="col text-left">
+                                <h5>{{food_category.name}}</h5>
+                            </div>
+                            <div class="col text-right">
+                                <button class="btn btn-success px-5" data-bs-target="#addItem" data-bs-toggle="modal"
+                                    onclick="OpenAddItem('{{food_category.pk}}')">
+                                    + Add Items
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            {% for item in food_category.fooditem_set.all %}
+                            <div class="col-md-4 col-sm-6 mb-4">
+                                <div class="card p-2 h-100">
+                                    <div class="d-flex align-items-center">
+                                        <img class="flex-shrink-0 img-fluid rounded" src="{{item.food_image.url}}"
+                                            alt="" style="width: 80px;">
+                                        <div class="w-100 d-flex flex-column text-start ps-4">
+                                            <h5
+                                                class="d-flex justify-content-between align-items-center border-bottom pb-2">
+                                                <span class="{{item.food_type}}-icon food-type"></span><span
+                                                    class="food-name">{{item.name}}</span>
+                                                <span class="text-primary">₹ <span class="food-price">
+                                                        {{ item.price}}</span>
+                                                </span>
+                                            </h5>
+
+                                            <small class="fst-italic food-description">{{ item.description }}</small>
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12">
+                                                    <button type="button" class="btn btn-danger btn-sm mt-2"
+                                                        onclick="DeleteItem('{{item.pk}}')">Delete</button>
+                                                    <button type="button" class="btn btn-warning btn-sm mt-2"
+                                                        data-bs-toggle="modal" data-bs-target="#addItem"
+                                                        onclick="EditItem('{{food_category.pk}}', this, '{{item.pk}}')">Edit</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-primary checkout-btn" data-bs-toggle="modal" data-bs-target="#addcategory">Add
+        Category</button>
+</div>
+</div>
+
+<script src="/static/restorent/add_menue.js"></script>
+
+{% endblock %}

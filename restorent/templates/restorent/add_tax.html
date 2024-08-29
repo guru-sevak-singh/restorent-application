@@ -1,0 +1,87 @@
+{% extends "restorent/base.html" %}
+
+{% block title %}
+
+<title>
+    Add TAX
+</title>
+
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h5 class="section-title ff-secondary text-center text-primary fw-normal">Orders Dashboard</h5>
+            <h4 class="mb-5">All Orders</h4>
+        </div>
+
+        <div class="row mb-4">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+
+                    {% for field in form %}
+                    <div class="col-4">
+                        <label for="date-range">{{field.name}}</label>
+                        {{field}}
+                    </div>
+                    {% endfor %}
+                    <div class="col-4 py-3">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="row g-4 ">
+
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        #
+                                    </th>
+                                    <th scope="col">
+                                        Tax Name
+                                    </th>
+                                    <th scope="col">
+                                        Tax perscantage
+                                    </th>
+                                    <th>
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for tax in all_tax %}
+                                <tr>
+                                    <th scop="row">
+                                        {{ forloop.counter }}
+                                    </th>
+                                    <td>
+                                        {{ tax.name}}
+                                    </td>
+                                    <td>
+                                        {{ tax.tax_perscentage }}
+                                    </td>
+                                    <td>
+                                        Delete
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

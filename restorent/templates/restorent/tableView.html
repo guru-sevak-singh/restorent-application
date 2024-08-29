@@ -1,0 +1,127 @@
+{% extends "restorent/base.html" %}
+{% block title %}
+<title>
+    All Tables
+</title>
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container-xxl py-5">
+    <div class="container" id="tableContainer">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h5 class="section-title ff-secondary text-center text-primary fw-normal">View Stable Status</h5>
+            <h4 class="mb-5">Select Table to know more details</h4>
+        </div>
+        {% for floor in floors %}
+        <div class="row g-4 mt-2" id="{{floor}}">
+            <h4>
+                {{floor}}
+            </h4>
+            {% for table in floor.table_set.all %}
+            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s" id="table-id-{{table.pk}}">
+
+                <div class="service-item rounded">
+                    {% if table.vacent_status %}
+                    <div class="table-status busy cursor-pointer" onclick="ChangeUrl('{{table.pk}}')">
+                        Busy
+                    </div>
+                    {% else %}
+                    <div class="table-status bg-success cursor-pointer" onclick="ChangeUrl('{{table.pk}}')">
+                        Free
+                    </div>
+                    {% endif %}
+                    <div class="p-3">
+                        <a href="#" id="{% url 'restorent:show_menue' table.pk %}" onclick="openUrl(this)">
+                            {% if table.floor.name == "Delivery" %}
+                                <h5 class="mb-3">{{table.order_set.first.name }}</h5>
+                            {% else %}
+                                <h5 class="mb-3">Table {{ forloop.counter }}</h5>
+                            {% endif %}
+
+
+                            <div class="order-list">
+                                {% if table.vacent_status %}
+
+                                {% if table.order_panding %}
+                                <p class="order-status mb-2">
+                                    <i class="fa fas fa-utensils text-primary mb-0 me-3"></i>Preparing Order
+                                </p>
+                                {% else %}
+                                <p class="order-status mb-2">
+                                    <i class="fa fa-check-circle text-success" aria-hidden="true"></i>Order Served
+                                </p>
+                                {% endif %}
+
+                                {% if table.payment_panding %}
+
+                                <p class="order-status">
+                                    <i class="fa fas fa-clock text-danger mb-0 me-3"></i>
+                                    Payment Pending
+                                </p>
+
+                                {% else %}
+
+                                <p class='order-status'>
+                                    <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                                    Payment Done
+                                </p>
+
+                                {% endif %}
+
+                                {% else %}
+                                <p class="order-status mb-2">
+                                    <i class="fa fa-cart-plus text-primary mb-0 me-3"></i>Generate Order
+                                </p>
+                                {% endif %}
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <!-- </a> -->
+            </div>
+            {% endfor %}
+
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+<!-- Service End -->
+
+<!-- Modal -->
+<div class="modal fade" id="changeTableStatus" tabindex="-1" aria-labelledby="changeTableStatusLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="changeTableStatusLabel">Change Table Status</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="form-floating">
+                        <select class="form-select" id="vacent_status">
+                            <option value="free">Free</option>
+                            <option value="True">Busy</option>
+                        </select>
+                        <label for="vacent_status">Change Table Status to</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" onclick="ChangeStatus()" class="btn btn-primary" class="btn-close"
+                    data-bs-dismiss="modal">Save
+                    changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ table.restorent.id|json_script:"restorent_id" }}
+
+<script src="/static/restorent/table_view.js"></script>
+
+{% endblock %}

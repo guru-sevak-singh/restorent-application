@@ -1,0 +1,126 @@
+{% extends "restorent/base.html" %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h5 class="section-title ff-secondary text-center text-primary fw-normal">Our Menu</h5>
+            <h1 class="mb-2">Our Delicious Food Items</h1>
+            <h5 class="tableNo mb-5">
+                Selected Table : <span class="text-primary" id="table-name">{{table.floor}}-{{table_number}}</span>
+            </h5>
+        </div>
+        <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.1s">
+            <ul class="nav nav-pills d-inline-flex justify-content-center border-bottom mb-5">
+                {% for food_catogery in food_categories %}
+
+                <li class="nav-item">
+                    {% if forloop.counter == 1 %}
+                    <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3 active" data-bs-toggle="pill"
+                        href="#tab-{{forloop.counter}}">
+                        {% else %}
+
+                        <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3" data-bs-toggle="pill"
+                            href="#tab-{{forloop.counter}}">
+
+                            {% endif %}
+                            <!-- <i class="fa fa-coffee fa-2x text-primary"></i> -->
+                            <div class="ps-3">
+                                <!-- <small class="text-body">#</small> -->
+                                <h6 class="mt-n1 mb-0">{{food_catogery.name}}</h6>
+                            </div>
+                        </a>
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="tab-content">
+
+                {% for food_catogery in food_categories %}
+                {% if forloop.counter == 1 %}
+                <div id="tab-{{forloop.counter}}" class="tab-pane fade show p-0 active">
+                    {% else %}
+                    <div id="tab-{{forloop.counter}}" class="tab-pane fade show p-0">
+                        {% endif %}
+
+                        <div class="row">
+                            {% for food_item in food_catogery.fooditem_set.all %}
+                            <div class="col-lg-6 col-sm-6" id="item-id-{{food_item.pk}}">
+                                <div class="d-flex align-items-center menu-item">
+                                    <img class="flex-shrink-0 img-fluid rounded" src="{{food_item.food_image.url}}"
+                                        alt="" style="width: 80px;">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <span class="item-pk" style="display: none;">{{food_item.pk}}</span>
+                                        <h5 class="d-flex justify-content-between border-bottom pb-2">
+                                            <span><span class="{{food_item.food_type}}-icon item-type"></span><span
+                                                    class="item-name">{{food_item}}</span></span>
+                                            <span class="text-primary">₹<span
+                                                    class="item-price">{{food_item.price}}</span></span>
+                                        </h5>
+                                        <small class="fst-italic item-description">
+                                            {{food_item.description}}
+                                        </small>
+                                        <div class="row align-items-center justify-content-between mt-2">
+                                            <div class="col-lg-6 col-md-6 col-12 add-box">
+                                                <button class="add-to-cart btn btn-primary"
+                                                    onclick="addToCart(this)">Add <i
+                                                        class="fas fa-cart-plus"></i></button>
+                                            </div>
+                                            <div class="row d-none remove-box">
+
+                                                <div class="col-lg-6 col-md-6 col-12">
+                                                    <div class="quantity-controls" style="display: flex;">
+                                                        <button class="minus btn btn-primary"
+                                                            onclick="DecreseQuantity(this)">-</button>
+                                                        <span class="quantity">1</span>
+                                                        <button class="plus btn btn-primary"
+                                                            onclick="IncreseQuantity(this)">+</button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-12 text-md-end text-lg-end">
+                                                    <button onclick="removeItem(this)"
+                                                        class="remove-from-cart btn text-primary text-capitalize"><i
+                                                            class="fas fa-trash me-2"></i>Remove Item </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Menu End -->
+
+    <!-- cart-panel -->
+    <a class="cart-panel" href="{% url 'restorent:cart' table.id %}" id="cart-div">
+        <div class="cart-content">
+            <div class="row">
+                <div class="col text-start">
+                    <p class="mb-0"><span id="cart-length">0</span> Items added ; Amount: ₹<span
+                            id="cart-amount">0</span></p>
+                </div>
+                <div class="col">
+                    <p class="mb-0">View Cart <i class="bi bi-chevron-right ms-2"></i></p>
+                </div>
+            </div>
+
+        </div>
+    </a>
+    <!-- cart-panel -->
+</div>
+<script src="/static/restorent/show_menue.js"></script>
+
+{% endblock %}

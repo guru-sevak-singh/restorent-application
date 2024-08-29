@@ -1,0 +1,9 @@
+django
+daphne
+channels
+djangorestframework
+qrcode
+psycopg2-binary
+pillow
+gunicorn
+uvicorn

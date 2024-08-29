@@ -1,0 +1,142 @@
+{% extends "restorent/base.html" %}
+
+{% block title %}
+
+<title>
+    All Payments
+</title>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h5 class="section-title ff-secondary text-center text-primary fw-normal">Orders Dashboard</h5>
+            <h4 class="mb-5">Payment Details</h4>
+        </div>
+        <!-- date range picker start -->
+        <form action="">
+            <div class="row mb-4">
+                <div class="col-md-10 col-lg-6 col-12">
+                    <div class="row align-items-center g-3">
+                        <div class="col-lg-2 col-md-3 col-12">
+                            <label for="daterange" class="fw-bold">Filter Result</label>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon1"> <i class="fa fa-calendar"></i></span>
+                                <input type="text" id="daterange" class="form-control br-2" name="daterange"
+                                    aria-label="daterange" aria-describedby="basic-addon1">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-12">
+
+                            <button type="submit" class="btn btn-primary"> Submit</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+        <!-- date range picker end -->
+
+        <div class="row g-4 ">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table custom-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    S No.
+                                </th>
+
+                                <th scope="col">
+                                    Date
+                                </th>
+
+                                <th scope="col">
+                                    Time
+                                </th>
+                                <th scope="col" class="text-end">
+                                    Amount
+                                </th>
+
+                                <th scope="col">
+                                    Payment Method
+                                </th>
+                                <th scope="col">
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for payment in payments %}
+                            <tr>
+                                <th scope="row">
+                                    # {{forloop.counter}}
+                                </th>
+                                <td>
+                                    {{payment.timing.date}}
+                                </td>
+                                <td>
+                                    {{payment.timing.time}}
+                                </td>
+                                <td class="text-end">
+                                    ₹ {{payment.paid_amount}}
+                                </td>
+                                <td>
+                                    {{payment.payment_method}}
+                                </td>
+
+                                <td>
+                                    <a href="{% url 'restorent:delete_payment' payment.id %}">
+
+                                        <i class="fa fa-trash-alt"></i>
+                                    </a>
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/static/restorent/payment.js"></script>
+{{ start_date|json_script:"start-date"}}
+{{ end_date|json_script:"end-date"}}
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+    const start_date = JSON.parse(document.getElementById('start-date').innerText);
+    const end_date = JSON.parse(document.getElementById('end-date').innerText)
+
+
+    $(document).ready(function () {
+        $('#daterange').daterangepicker({
+            locale: {
+                format: 'DD/MMM/YYYY'
+            },
+            startDate: new Date(start_date), // Set start date to today
+            endDate: new Date(end_date),   // Set end date to today
+            showDropdowns: true,
+            opens: 'right',
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        });
+    });
+</script>
+
+{% endblock %}
