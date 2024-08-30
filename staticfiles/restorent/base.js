@@ -30,7 +30,7 @@ software_socket.onmessage = (event) => {
     else {
         let btn = document.getElementById('software-connocter');
         btn.className = "btn btn-danger";
-        btn.innerHTML = '<span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span> UPI Disconnected'
+        btn.innerHTML = '<span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>UPI Disconnected'
 
 
     }

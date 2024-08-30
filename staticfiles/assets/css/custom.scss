@@ -224,3 +224,50 @@
     padding-right: 20px!important;
   }
  }
+ .dashboard {
+  .border-left-info {
+    border-left: .25rem solid #36b9cc !important;
+}
+.border-left-primary {
+    border-left: .25rem solid #4e73df !important;
+}
+.border-left-success {
+    border-left: .25rem solid #1cc88a !important;
+}
+.border-left-warning {
+    border-left: .25rem solid #f6c23e !important;
+}
+.card {
+    border: 0px solid;
+    border-radius: 10px;
+}
+
+.text-success {
+  color: #1cc88a !important;
+}
+.text-primary-custm {
+  color: #4e73df !important;
+}
+.text-info {
+  color: #36b9cc !important;
+}
+.text-warning {
+  color: #f6c23e !important;
+}
+.text-gray-300 {
+  color: #dddfeb !important;
+}
+.text-xs {
+  font-size: .8rem;
+}
+ }
+ .bg-grey {
+  background-color: #f1f8ff !important;
+}
+ .form-control:focus {
+  box-shadow: 0px 0px 0px 0px transparent;
+ }
+ #revenueChart {
+  width: 100%; /* Responsive width */
+  height: 300px;/* Desired height for the chart */
+}

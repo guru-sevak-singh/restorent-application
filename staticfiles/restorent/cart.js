@@ -217,8 +217,14 @@ function calculateTax(amount) {
 }
 
 function createOrder() {
+    let user_detail = document.getElementById('user-detail')
+    if (user_detail != null) {
+        let user_information = localStorage.getItem('user_information');
+        user_detail.value = user_information;
+    }
+
     cart_data = localStorage.getItem(table_name);
     document.getElementById('order_data').value = cart_data;
-    localStorage.removeItem(table_name)
+    // localStorage.removeItem(table_name)
     document.getElementById('order_submit').click()
 }

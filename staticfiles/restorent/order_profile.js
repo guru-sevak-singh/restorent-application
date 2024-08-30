@@ -28,8 +28,7 @@ function showTax() {
 
     document.getElementById('bill_amount').value = parseFloat(grand_sum);
 
-
-    adjusted_amount = parseFloat(document.getElementById('adjustment-amount').innerText);
+    adjusted_amount = parseInt(JSON.parse(document.getElementById('adjustment-amount').innerText));
 
     panding_amount = parseFloat(grand_sum) + adjusted_amount
 
@@ -54,7 +53,7 @@ new_amount = parseFloat(new_amount)
 console.log(new_amount)
 paid_amount.value = new_amount;
 
-adjustment.addEventListener('change', (e)=>{
+adjustment.addEventListener('change', (e) => {
     new_adjustment_value = parseFloat(e.target.value);
     let bill_amount = parseFloat(document.getElementById('bill_amount').value);
     new_amount = bill_amount + new_adjustment_value;
@@ -63,3 +62,42 @@ adjustment.addEventListener('change', (e)=>{
     console.log(new_amount)
     paid_amount.value = new_amount
 })
+
+async function getRequest(url) {
+    console.log(url);
+    return fetch(url)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            return data;
+        })
+        .catch(function (error) {
+            console.error('Error:', error);
+            throw new Error('Failed to fetch data');
+        });
+}
+
+const order_id = document.getElementById('order-id').innerText
+
+
+
+document.getElementById('food-delivery-pending').addEventListener('click', () => {
+    let url = `/update_order_status/${order_id}/false`;
+    getRequest(url);
+    document.getElementById('delivery-status').innerHTML = '<i class="fa fas fa-clock text-danger mb-0 me-1"></i>Delivery Pending';
+})
+
+document.getElementById('food-delivery-done').addEventListener('click', () => {
+    let url = `/update_order_status/${order_id}/true`;
+    getRequest(url);
+    document.getElementById('delivery-status').innerHTML = '<i class="fa fas fa-check-circle text-success mb-0 me-1"></i>Delivery Done';
+})
+
+function printKot() {
+    window.open(`/kot/${order_id}`, "", "width=600, height=600")
+}
+
+function printBill() {
+    window.open(`/bill/${order_id}`, "", "width=600, height=600")
+}
