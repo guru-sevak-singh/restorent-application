@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-y0h2_gz@bds&9jgm#secz$bgqaj4(rv7trdh7=35d^hp6p4vcn'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['192.168.1.37' , 'localhost', '192.168.0.115', '192.168.1.41']
+ALLOWED_HOSTS = ['localhost', '64.227.157.254']
 
 
 # Application definition
@@ -90,26 +90,18 @@ CHANNEL_LAYERS = {
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-
 #  USING THE POSTGRESQL DATABASE
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'restorent',
-#         'USER': 'guru',
-#         'PASSWORD': 'guru@2003',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'restorent',
+        'USER': 'guru',
+        'PASSWORD': 'guru@2003',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
 
 
 
