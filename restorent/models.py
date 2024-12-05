@@ -7,11 +7,18 @@ from django.utils import timezone
 # Create your models here.
 
 class Restorent(models.Model):
+    RESTORENT_TYPE = [
+        ('restorent', 'Restorent'),
+        ('theatre', 'Theatre'),
+    ]
     name = models.CharField(max_length=200)
     owner_name = models.CharField(max_length=200)
     address = models.TextField()
     upi_id = models.CharField(max_length=200, blank=True, default="")
     phone_number = models.CharField(max_length=15, blank=True, default="")
+    notification_token = models.CharField(max_length=300, blank=True, default="")
+
+    type = models.CharField(max_length=20, choices=RESTORENT_TYPE, default="restorent")
 
     def __str__(self):
         return self.name

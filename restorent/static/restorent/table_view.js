@@ -23,8 +23,8 @@ function ChangeStatus() {
         'pk': SelectedTableId,
         'status': status,
         'action': 'update_table_status'
-    }
-
+    }    
+    
     console.log('going to send the socket request...');
     socket.send(JSON.stringify(data))
 }
@@ -164,34 +164,15 @@ function UpdateNewData(data) {
 }
 
 // // Function to Play Notification Sound
-// function playAudio() {
-//     const audio = new Audio('/static/sound/notification.wav');
-//     audio.play().catch(error => {
-//         console.error('Error in Playing audio', error)
-//     })
-// }
+function playAudio() {
+    const audio = new Audio('/static/sound/notification.wav');
+    audio.play().catch(error => {
+        console.error('Error in Playing audio', error)
+    })
+}
 
-function openUrl(a) {
-    let table_area = a.parentElement.parentElement.parentElement.parentElement.id;
-    let table_name = a.getElementsByTagName('h5')[0].innerText;
-
-    try {
-        table_name = table_name.replaceAll('Table ', '')
-        complete_table_name = `${table_area}-${table_name}`
-        let big_box = a.parentElement.parentElement;
-        let status = big_box.getElementsByClassName('table-status')[0].classList;
-
-        if (status.contains('bg-success')) {
-            localStorage.removeItem(complete_table_name);
-        }
-    }
-    catch (error) {
-        console.log(error);
-    }
-
-    url = a.id;
-    window.open(url, '_self');
-
+function removeTable(complete_table_name) {
+    localStorage.removeItem(complete_table_name);
 }
 
 
@@ -219,20 +200,6 @@ class Queue {
 
 // Initialize a queue instance
 var queue = new Queue();
-
-// Function to create and enqueue audio elements
-function playAudio() {
-    var audio = document.createElement('audio');
-    var source = document.createElement('source');
-    source.src = "https://www.dopagentsoftware.com/assets/sound/notification-v2.mp3";
-    audio.appendChild(source);
-
-    // Append the audio element to the body (or any other container)
-    document.body.appendChild(audio);
-
-    // Enqueue the audio element for playback
-    queue.enqueue(audio);
-}
 
 // Function to play audio notifications from the queue
 setInterval(function () {

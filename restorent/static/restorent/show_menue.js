@@ -1,4 +1,11 @@
 const table_name = document.getElementById('table-name').innerText;
+
+if (document.getElementById('all-selected-orders') != undefined){
+    let all_selected_items = document.getElementById('all-selected-orders').innerText;
+    localStorage.setItem(table_name, all_selected_items);
+}
+
+
 let temp = localStorage.getItem(table_name)
 if (temp == null) {
     localStorage.setItem(table_name, '{}')

@@ -17,16 +17,15 @@ from datetime import datetime
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
+from django.core.paginator import Paginator
+from pushbullet import Pushbullet
 
 
+def website(request):
+    return render(request, 'restorent/website.html')
 
-# def is_owner(user):
-#     owner_h = user.groups.filter(name="Restorent Owner").exists()
-#     if owner_h:
-#         return True
-#     else:
-#         raise PermissionDenied
-
+def terms_and_conditions(request):
+    return render(request, 'restorent/terms-and-conditions.html')
 
 # Create your views here.
 @login_required
@@ -34,7 +33,10 @@ def index(request):
     # all floor of this restorent
     restorent = request.user.userprofile.restorent
     floors = Floor.objects.filter(restorent=restorent)
-    return render(request, 'restorent/tableView.html', {"floors": floors})
+    if restorent.type == 'restorent':
+        return render(request, 'restorent/tableView.html', {"floors": floors})
+    else:
+        return render(request, 'restorent/theatreView.html', {'floors': floors})
 
 @login_required
 def dashboard(request):
@@ -128,7 +130,6 @@ def add_food_item(request, pk=None):
 def delete_food_item(request):
     if request.method == 'POST':
         pk = request.POST.get('pk')
-        print(pk)
         food_item = FoodItem.objects.filter(pk=pk)
         food_item.delete()
         return redirect('restorent:add_menue')
@@ -138,7 +139,6 @@ def add_adjustment(request, pk):
     if request.method == 'POST':
         order = Order.objects.get(pk=pk)
         adjustment = request.POST.get('adjustment')
-        print(adjustment)
         
         order.adjustment = adjustment
         order.save()
@@ -180,11 +180,15 @@ def show_menue(request, pk):
 
     if table.vacent_status:
         try:
-            if request.user.userprofile:
-                last_order = Order.objects.filter(table=table).latest('start_time')
-                return redirect('restorent:order_profile', last_order.pk)
+            last_order = Order.objects.filter(table=table).latest('start_time')
+            if request.user.is_authenticated:
+                if request.user.userprofile.restorent == last_order.restorent:
+                    return redirect('restorent:order_profile', last_order.pk)
+            
+                else:
+                    return redirect('restorent:order_status', last_order.pk)                    
             else:
-                return HttpResponse('This Table alrady ocupied')
+                return redirect('restorent:order_status', last_order.pk)
         
         except:
             return HttpResponse('This Table alrady ocupied')
@@ -213,7 +217,6 @@ def cart(request, pk):
     restorent = floor.restorent
     return render(request, 'restorent/cart.html', {'table': table, 'table_number': table_number, 'restorent': restorent})
 
-@login_required
 def create_order(request, pk):
     if request.method == 'POST':
         table = Table.objects.get(pk=pk)
@@ -221,8 +224,26 @@ def create_order(request, pk):
         order_data = request.POST['order_data']
         order_data = json.loads(order_data)
         
-        new_order = Order(table=table, restorent=table.floor.restorent)
-        new_order.save()
+        if table.vacent_status:
+            
+            last_order = Order.objects.filter(table=table).latest('start_time')
+            if last_order.end_time == None:
+                # editable order
+                new_order = last_order
+                all_items = last_order.items.all()
+                all_items.delete()
+            else:
+                if last_order.normal_table == True: 
+                    table = last_order.table
+                    messages.error(request, "Either The Payment of This Order is Completed or Food Delivered To this Table, So this is not Editable !")
+                    return redirect("restorent:order_profile", pk)
+
+                else:
+                    messages.error(request, "Delivery of this Table is Completed Successfully or Payment is Completed, So this is not Editable !")
+                    return redirect("restorent:order_profile", pk)
+        else:                
+            new_order = Order(table=table, restorent=table.floor.restorent)
+            new_order.save()
 
         # make the table vacent status = True
         table.vacent_status = True
@@ -240,7 +261,8 @@ def create_order(request, pk):
                             "table_vacent_status": table.vacent_status,
                             "order_panding": table.order_panding,
                             "payment_panding": table.payment_panding,
-                            "pk": table.pk 
+                            "pk": table.pk,
+                            "restorent_id": new_order.restorent.id,
                         }
                 })
         
@@ -271,13 +293,39 @@ def all_orders(request):
             start_date = timezone.now().date()
             end_date = timezone.now().date()
 
-    orders = Order.objects.filter(restorent=restorent, start_time__date__range=(start_date, end_date) )
-    return render(request, 'restorent/orderHistory.html', {'orders': orders, "start_date": start_date, "end_date": end_date})
+    all_orders = Order.objects.filter(restorent=restorent, start_time__date__range=(start_date, end_date))
+    order_type = request.GET.get('order_type', 'All')
+    payment_status = request.GET.get('payment_status', 'All')
+    if order_type != 'All':
+        if order_type == 'delivery':
+            all_orders = all_orders.filter(normal_table=False)
+        if order_type == 'dine-in':
+            all_orders = all_orders.filter(normal_table=True)
+    
+    if payment_status != 'All':
+        if payment_status == 'pending':
+            all_orders = all_orders.filter(end_time__isnull=True)
+        if payment_status == 'completed':
+            all_orders = all_orders.filter(end_time__isnull=False)
+            
+    all_orders = all_orders.order_by('start_time')
+    paginator = Paginator(all_orders, 10)  # Show 10 items per page.
+
+    page_number = request.GET.get('page')
+    if page_number == None:
+        page_number = 1
+    orders = paginator.get_page(page_number)
+
+    return render(request, 'restorent/orderHistory.html', {'orders': orders, "start_date": start_date, "end_date": end_date, "order_type": order_type ,"payment_status": payment_status})
 
 
-@login_required
 def order_profile(request, pk):
     order = Order.objects.get(pk=pk)
+    if request.user.is_authenticated:
+        if order.restorent != request.user.userprofile.restorent:
+            return redirect('restorent:order_status', pk)
+    else:
+        return redirect('restorent:order_status', pk)
     try:
         table = order.table
 
@@ -331,7 +379,8 @@ def order_profile(request, pk):
                                 'work': 'add_new_payment',
                                 'status': 'success',
                                 'order_id': order.id,
-                                'transaction_id': order.transaction_id
+                                'transaction_id': order.transaction_id,
+                                "restorent_id": order.restorent.id,
                                 }
                             )
                         }
@@ -346,12 +395,21 @@ def order_profile(request, pk):
                                 "table_vacent_status": table.vacent_status,
                                 "order_panding": table.order_panding,
                                 "payment_panding": table.payment_panding,
-                                "pk": table.pk 
+                                "pk": table.pk,
+                                "restorent_id": order.restorent.id,
                             }
                         })
 
 
                     order.table.payment_panding = False
+                
+                if table != None:
+                    if order.normal_table == False:
+                        if order.food_delivered == False:
+                            pass
+                        else:
+                            table.delete()
+
                 return redirect('restorent:order_profile', pk)
 
     form = PaymentForm()
@@ -377,13 +435,21 @@ def all_payments(request):
             end_date = timezone.now().date()
 
     payments = Payment.objects.filter(order__restorent=restorent, timing__date__range=(start_date, end_date))
+    paginator = Paginator(payments, 10)  # Show 10 items per page.
+
+    page_number = request.GET.get('page')
+    if page_number == None:
+        page_number = 1
+    payments = paginator.get_page(page_number)
     return render(request, 'restorent/all_payments.html', {'payments': payments, "start_date": start_date, "end_date": end_date})
 
 
 @login_required
 def update_order_status(request, pk, status):
+    order = Order.objects.get(pk=pk)
+    if order.restorent != request.user.userprofile.restorent:
+        raise PermissionDenied
     try:
-        order = Order.objects.get(pk=pk)
         table = order.table
         if status == 'true':
             order.food_delivered = True
@@ -393,8 +459,10 @@ def update_order_status(request, pk, status):
             table.order_panding = True
         table.save()
         order.save()
-        
+
         # send order status to the socket
+
+
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
         'dashboard',
@@ -405,35 +473,63 @@ def update_order_status(request, pk, status):
                 "table_vacent_status": table.vacent_status,
                 "order_panding": table.order_panding,
                 "payment_panding": table.payment_panding,
-                "pk": table.pk
+                "pk": table.pk,
+                "restorent_id": order.restorent.id,
             }
         })
 
-        if order.food_delivered == True and order.normal_table == False:
+        if order.food_delivered == True and order.normal_table == False and order.end_time != None:
             table.delete()
+        else:
+            pass
+    
     except:
-        pass
+        if status == 'true':
+            order.food_delivered = True
+        else:
+            order.food_delivered = False
+        order.save()
+
     return HttpResponse("done")
 
 @login_required
 def edit_order(request, pk):
     order = Order.objects.get(pk=pk)
-    if order.end_time != None:
+    if order.restorent != request.user.userprofile.restorent:
+        raise PermissionDenied
+    
+    if order.end_time == None and order.food_delivered == False:
         table = order.table
-        messages.error(request, "Payment of This Order is Completed, So this is not Editable !")
-        return redirect("restorent:order_profile", pk)
+
+        restorent = table.floor.restorent
+        food_categories = FoodCategory.objects.filter(restorent=restorent)
+        floor = table.floor
+        tables = floor.table_set.order_by('id')
+        tables = list(tables)
+
+        table_number = tables.index(table)
+        table_number += 1
+
+        selected_items = {}
+        for item in order.items.all():
+            
+            main_item = FoodItem.objects.filter(name=item.item_name, price=item.item_price, food_type=item.food_type).first()
+            if main_item != None:
+                selected_items[main_item.pk] = {"item_type": main_item.food_type, "name": main_item.name, "item_price": main_item.price, "item_description": main_item.description, "quantity": item.item_quantity}
+
+        return render(request, 'restorent/edit_order.html', {'table': table, 'food_categories': food_categories, 'table_number': table_number, "selected_items": selected_items})
+    
 
     else:
-        if order.normal_table == True:
-            order.delete()
-            table.vacent_status = False
-            table.save()
-        
-        else:
-            messages.error(request, "Delivery Order's Are Not Editable !")
+        if order.normal_table == True: 
+            table = order.table
+            messages.error(request, "Either The Payment of This Order is Completed or Food Delivered To this Table, So this is not Editable !")
             return redirect("restorent:order_profile", pk)
 
-    return redirect("restorent:show_menue", table.pk)
+        else:
+            messages.error(request, "Delivery of this Table is Completed Successfully or Payment is Completed, So this is not Editable !")
+            return redirect("restorent:order_profile", pk)
+
 
 
 @login_required
@@ -526,7 +622,7 @@ def bill(request, pk):
 def show_qr(request, pk):
     order = Order.objects.get(pk=pk)
     if order.end_time != None:
-        return redirect('restorent:payment_added_successfully')
+        return redirect('restorent:payment_added_successfully', order.pk)
     
     transaction_id = order.generate_transaction_id()
     order.transaction_id = transaction_id
@@ -538,16 +634,17 @@ def show_qr(request, pk):
     total_amount = order.complete_amount()
 
 
-    url = f'upi://pay?pa={upi_id}&pn={owner_name}&tr={transaction_id}&tn=restorent payment&am={total_amount}&cu=INR'
+    url = f'upi://pay?pa={upi_id}&pn={owner_name}&tr={transaction_id}&mc=5732&tn=restorent payment&am={total_amount}&cu=INR'
     file_name = f'qr{order.id}'
     media_path = settings.MEDIA_ROOT
     complete_path = os.path.join(media_path, 'qr_images', file_name)
     file_name = generate_qr(complete_path, url)
 
-    return render(request, 'restorent/qr_template.html', {"order": order, 'total_amount': total_amount})
+    return render(request, 'restorent/qr_template.html', {"order": order, 'total_amount': total_amount, 'payment_url': url, "restorent": restorent})
 
-def payment_added_successfully(request):
-    return render(request,'restorent/payment_added_successfully.html')
+def payment_added_successfully(request, pk):
+    order = Order.objects.get(pk=pk)
+    return render(request,'restorent/payment_added_successfully.html', {'order': order})
 
 
 def home_delivery(request, pk):
@@ -607,6 +704,24 @@ def delivery_cart(request, pk):
                         }
                 })
         
+        try:
+            # send push notification
+            access_tokens = restorent.notification_token
+            access_tokens = access_tokens.replace(" ", "")
+            access_tokens = access_tokens.split(",")
+            title = "New Delivery Received !"
+            url = f"http://theopentable.in/order_profile/{new_order.pk}"
+            body = f"Visit the link to check Delivery Order:- {url}"
+            for token in access_tokens:
+                try:
+                    pb = Pushbullet(token)
+                    pb.push_note(title, body)
+                
+                except:
+                    pass
+
+        except:
+            pass
         
         for item_id in order_data:
             item = order_data[item_id]
@@ -654,7 +769,23 @@ def sign_up_page(request):
                 restorent=restorent
             )
 
-            return HttpResponse(f'new user is created.... | Thankyou {restorent_name}')
+            return redirect('restorent:index')
 
     form = RestorentForm()
     return render(request, 'restorent/sign_up.html', {'form': form})
+
+
+def order_status(request, pk):
+    order = Order.objects.get(pk=pk)
+    return render(request, 'restorent/order_status.html', {'order': order})
+
+def show_old_orders(request, pk):
+    restorent = Restorent.objects.get(pk=pk)
+    if request.method == 'POST':
+        phone_number = request.POST.get('phone-number')
+        orders = Order.objects.filter(phone_number=phone_number, restorent=restorent)
+        return render(request, 'restorent/show_old_orders.html', {'orders': orders})
+    
+def theaterView(request):
+    return render(request, 'restorent/theatreView.html')
+    

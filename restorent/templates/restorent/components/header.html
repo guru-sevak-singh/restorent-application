@@ -18,7 +18,8 @@
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu m-0">
-                        <a href="#" class="dropdown-item">Booking</a>
+                        <a href="{% url 'restorent:home_delivery' request.user.userprofile.restorent_id %}" class="dropdown-item">Delivery</a>
+                        <a href="#" class="dropdown-item">{{request.user.userprofile.restorent_id}}</a>
                         <a href="#" class="dropdown-item">Our Team</a>
                         <a href="#" class="dropdown-item">Testimonial</a>
                     </div>
@@ -48,5 +49,5 @@
 
 {{ request.user.userprofile.restorent.pk|json_script:"restorent_id"}}
 
-<script src="https://guru-sevak-singh.github.io/restorent-static/staticfiles/restorent/base.js"></script>
+<script src="/static/restorent/base.js"></script>
 {% endif %}

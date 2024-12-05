@@ -22,7 +22,7 @@ function createItemCart(item_name, item_type, item_price, item_quantity, item_de
     cart_box = document.getElementById('cart-items');
     old_html = cart_box.innerHTML;
     new_item_card = `
-                    <div class="col-lg-6 col-md-6 col-12 mb-4">
+                    <div class="col-lg-6 col-md-6 col-12">
                         <div class="cart-item">
                             <h1 class='item-id' style="display:none;">${item_id}</h1>
                             <div class="row">

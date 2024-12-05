@@ -8,7 +8,7 @@
 {% block content %}
 
 
-<div class="container-xxl py-5">
+<div class="container-xxl pb-4 pt-2">
     <div class="container" id="tableContainer">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h5 class="section-title ff-secondary text-center text-primary fw-normal">View Stable Status</h5>
@@ -19,7 +19,7 @@
             <h4>
                 {{floor}}
             </h4>
-            {% for table in floor.table_set.all %}
+            {% for table in floor.table_set.all|dictsort:"id" %}
             <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s" id="table-id-{{table.pk}}">
 
                 <div class="service-item rounded">
@@ -33,11 +33,11 @@
                     </div>
                     {% endif %}
                     <div class="p-3">
-                        <a href="#" id="{% url 'restorent:show_menue' table.pk %}" onclick="openUrl(this)">
+                        <a onclick="removeTable('{{floor}}-{{forloop.counter}}')" href="{% url 'restorent:show_menue' table.pk %}">
                             {% if table.floor.name == "Delivery" %}
-                                <h5 class="mb-3">{{table.order_set.first.name }}</h5>
+                                <h6 class="mb-3">{{table.order_set.first.name }}</h6>
                             {% else %}
-                                <h5 class="mb-3">Table {{ forloop.counter }}</h5>
+                                <h6 class="mb-3">Table {{ forloop.counter }}</h6>
                             {% endif %}
 
 
@@ -111,7 +111,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary btn-custom" data-bs-dismiss="modal">Close</button>
                 <button type="button" onclick="ChangeStatus()" class="btn btn-primary" class="btn-close"
                     data-bs-dismiss="modal">Save
                     changes</button>
@@ -122,6 +122,6 @@
 
 {{ table.restorent.id|json_script:"restorent_id" }}
 
-<script src="https://guru-sevak-singh.github.io/restorent-static/staticfiles/restorent/table_view.js"></script>
+<script src="/static/restorent/table_view.js"></script>
 
 {% endblock %}

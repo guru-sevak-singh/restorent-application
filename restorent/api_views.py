@@ -41,8 +41,9 @@ def add_payment_by_url(request):
                 order.end_time = timezone.now()
 
                 table = order.table
-                table.payment_panding = False
-                table.save()
+                if table != None:
+                    table.payment_panding = False
+                    table.save()
 
                 order.save()
 
@@ -64,18 +65,25 @@ def add_payment_by_url(request):
                     }
                 )
 
-                # send data to the dashboard socket
-                async_to_sync(channel_layer.group_send)(
-                    'dashboard',
-                    {
-                'type': 'table_data',
-                'dashboard_data': {
-                        "table_vacent_status": table.vacent_status,
-                        "order_panding": table.order_panding,
-                        "payment_panding": table.payment_panding,
-                        "pk": table.pk 
-                    }
-                })
+                if table != None:
+                    # send data to the dashboard socket
+                    async_to_sync(channel_layer.group_send)(
+                        'dashboard',
+                        {
+                    'type': 'table_data',
+                    'dashboard_data': {
+                            "table_vacent_status": table.vacent_status,
+                            "order_panding": table.order_panding,
+                            "payment_panding": table.payment_panding,
+                            "pk": table.pk 
+                        }
+                    })
+
+                    if order.normal_table == False:
+                        if order.food_delivered == False:
+                            pass
+                        else:
+                            table.delete()
 
                 return_data = {'message': 'payment done'}
                 

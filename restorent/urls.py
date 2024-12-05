@@ -1,11 +1,13 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as authontication_views
-
+from django.contrib.auth.views import LogoutView
 
 app_name = "restorent"
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.website, name='website'),
+    path('terms-and-conditions', views.terms_and_conditions, name="terms-and-conditions"),
+    path('seats', views.index, name='index'),
     path('login', authontication_views.LoginView.as_view(template_name='restorent/login.html'), name='login'),
     path('setting', views.setting, name='settings'),
     path('add_sitting', views.add_sitting_area, name='add_sitting'),
@@ -28,7 +30,7 @@ urlpatterns = [
     path('show_qr/<pk>', views.show_qr, name='show_qr'),
     path('restorent_detail', views.restorent_detail, name='restorent_detail'),
     path('delete_payment/<pk>', views.delete_payment, name='delete_payment'),
-    path('payment_added_successfully', views.payment_added_successfully, name='payment_added_successfully'),
+    path('payment_added_successfully/<pk>', views.payment_added_successfully, name='payment_added_successfully'),
     path('add_tax', views.add_tax, name='add_tax'),
     path('update_order_status/<pk>/<status>/', views.update_order_status, name='update_order_status'),
     path('home_delivery/<pk>', views.home_delivery, name='home_delivery'),
@@ -38,4 +40,8 @@ urlpatterns = [
     path('kot/<pk>', views.kot, name='kot'),
     path('bill/<pk>', views.bill, name='bill'),
     path('sign_up', views.sign_up_page, name='sign_up'),
+    path('order_status/<pk>', views.order_status, name='order_status'),
+    path('show_old_orders/<pk>', views.show_old_orders, name='show_old_orders'),
+    path('theaterView', views.theaterView, name='theaterView'),
+    path('logout/', LogoutView.as_view(next_page='restorent:login'), name='logout'),
 ]
