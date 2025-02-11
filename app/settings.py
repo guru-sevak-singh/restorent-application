@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'webpush',
 ]
 
 MIDDLEWARE = [
@@ -98,8 +99,12 @@ DATABASES = {
         'NAME': 'restorent',
         'USER': 'guru',
         'PASSWORD': 'guru@2003',
+        # 'HOST': 'theopentable.in',
         'HOST': 'localhost',
         'PORT': '5432',
+        # 'OPTIONS': {
+        #     'sslmode': 'require', # Enable SSL
+        # }
     }
 }
 
@@ -160,3 +165,9 @@ LOGIN_URL = 'restorent:login'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+WEBPUSH_SETTINGS = {
+    "VAPID_PUBLIC_KEY": "BFpGQtsPz6TP2WKMCJqyvY4DQ751x6JqSEHRdIUcJmxTvuGDpc16qMUW7xvD2a9zdtmmlyS-KVJwC_0xLPoKz4Q=",
+    "VAPID_PRIVATE_KEY": "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR0hBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEJHMHdhd0lCQVFRZ0xOMHJHTCtxanpuZ3Q5MGkKM3pZWmZYRlZjVHdsYVZmekFheEsyQUliWm1TaFJBTkNBQVJhUmtMYkQ4K2t6OWxpakFpYXNyMk9BME8rZGNlaQpha2hCMFhTRkhDWnNVNzdoZzZYTmVxakZGdThidzltdmMzYlpwcGNrdmlsU2NBdjlNU3o2Q3MrRQotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tCg==",
+    "VAPID_ADMIN_EMAIL": "guru@theopentable.in",
+}
