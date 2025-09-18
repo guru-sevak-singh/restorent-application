@@ -64,5 +64,5 @@ The system streamlines food ordering, reduces manual errors, and improves servic
 
 Clone the repo:  
 ```bash
-git clone https://github.com/yourusername/theopentable.git
-cd theopentable
+git clone https://github.com/guru-sevak-singh/restorent-application.git
+cd APP
