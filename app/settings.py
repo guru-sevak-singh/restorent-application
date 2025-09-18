@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-y0h2_gz@bds&9jgm#secz$bgqaj4(rv7trdh7=35d^hp6p4vcn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '64.227.157.254', '192.168.81.1']
+ALLOWED_HOSTS = ['localhost', '64.227.157.254', '192.168.81.1', 'theopentable.in']
 
 
 # Application definition
@@ -167,7 +167,31 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 WEBPUSH_SETTINGS = {
-    "VAPID_PUBLIC_KEY": "BFpGQtsPz6TP2WKMCJqyvY4DQ751x6JqSEHRdIUcJmxTvuGDpc16qMUW7xvD2a9zdtmmlyS-KVJwC_0xLPoKz4Q=",
-    "VAPID_PRIVATE_KEY": "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR0hBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEJHMHdhd0lCQVFRZ0xOMHJHTCtxanpuZ3Q5MGkKM3pZWmZYRlZjVHdsYVZmekFheEsyQUliWm1TaFJBTkNBQVJhUmtMYkQ4K2t6OWxpakFpYXNyMk9BME8rZGNlaQpha2hCMFhTRkhDWnNVNzdoZzZYTmVxakZGdThidzltdmMzYlpwcGNrdmlsU2NBdjlNU3o2Q3MrRQotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tCg==",
-    "VAPID_ADMIN_EMAIL": "guru@theopentable.in",
+    "VAPID_PUBLIC_KEY": "BDfi5sIHUc1z-8nJb62M7KL5bOLP9t29leG-nhSsPuVwvpCbBjQ26uTo2KVjq3ZXuIJx5OYQpYTmGKaAtZwqmsM=",
+    "VAPID_PRIVATE_KEY": "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR0hBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEJHMHdhd0lCQVFRZ2EvQ0hlc2JubU96Tm9KbG0KUGg5NndySnIyKzZ1OXQ2QVkzR2wxUjVxc2tHaFJBTkNBQVEzNHViQ0IxSE5jL3ZKeVcrdGpPeWkrV3ppei9iZAp2WlhodnA0VXJEN2xjTDZRbXdZME51cms2TmlsWTZ0MlY3aUNjZVRtRUtXRTVoaW1nTFdjS3ByRAotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tCg==",
+    "VAPID_ADMIN_EMAIL": "guru.filetesting@gmail.com",
 }
+
+
+# function subscribeUser() {
+#     navigator.serviceWorker.register("/static/sw.js").then(function(registration) {
+#         return registration.pushManager.subscribe({
+#             userVisibleOnly: true,
+#             applicationServerKey: "BDfi5sIHUc1z-8nJb62M7KL5bOLP9t29leG-nhSsPuVwvpCbBjQ26uTo2KVjq3ZXuIJx5OYQpYTmGKaAtZwqmsM="
+#         });
+#     }).then(function(subscription) {
+#         return fetch("/webpush/subscribe/", {
+#             method: "POST",
+#             body: JSON.stringify(subscription),
+#             headers: {
+#                 "Content-Type": "application/json"
+#             }
+#         });
+#     }).then(response => response.json())
+#     .then(data => console.log("Subscription successful:", data))
+#     .catch(error => console.error("Subscription failed:", error));
+# }
+
+# if ("serviceWorker" in navigator) {
+#     subscribeUser();
+# }
