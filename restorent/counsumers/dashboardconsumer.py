@@ -1,7 +1,8 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-from asgiref.sync import async_to_sync
+from django.db.models import Q
+from asgiref.sync import sync_to_async
 
 class DashboardConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -45,19 +46,24 @@ class DashboardConsumer(AsyncWebsocketConsumer):
         from restorent.models import Table, Order
         return_data = {}
         table = await database_sync_to_async(Table.objects.get)(pk=pk)
-
-        if status == "free":
-            order_no = await database_sync_to_async(lambda: Order.objects.filter(table=table, end_time__isnull=True).count())()
-            if order_no == 0:
-                status = False
-            else:
-                status = True
-                return_data['alert_message'] = 'payment is panding of a table'
         
+        if status == "free":
+            try:
+                last_order = await database_sync_to_async(Order.objects.filter(table=table).latest)('start_time')
+                
+                if last_order.end_time is None or last_order.food_delivered is False:
+                    status = True
+                    return_data['alert_message'] = 'There is Still Some Work Pending On This Table !'
+                else:
+                    status = False
+            except:
+                status = False
         else:
             status = True
             table.order_panding = True
             table.payment_panding = True
+
+        print(status)
 
         table.vacent_status = status
         await database_sync_to_async(table.save)()

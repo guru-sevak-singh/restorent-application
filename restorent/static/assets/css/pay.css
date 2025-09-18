@@ -166,9 +166,31 @@ input[type="radio"]:hover {
     color: #555;
 }
 body {
-    background-image: url('/static/assets/images/rupe.jpg'); /* Replace with your background image URL */
+    background-image: url('https://cdn.jsdelivr.net/gh/guru-sevak-singh/restorent-static/staticfiles/assets/images/rupe.jpg'); /* Replace with your background image URL */
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
     font-family: 'Heebo', sans-serif;
+}
+
+.popup {
+    display: none;
+    position: relative;
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    top: -60px;
+    width: 30%;
+}
+
+.show {
+    display: inline-block;
+    opacity: 1;
 }

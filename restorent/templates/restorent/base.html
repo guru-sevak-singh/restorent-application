@@ -3,9 +3,9 @@
 
 <head>
     <meta charset="utf-8">
-        {% block title %}
+    {% block title %}
 
-        {% endblock %}
+    {% endblock %}
 
 
 
@@ -38,6 +38,7 @@
     <!-- Template Stylesheet -->
     <link href="/static/assets/css/style.css" rel="stylesheet">
     <link href="/static/assets/css/custom.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -54,7 +55,8 @@
         {% for message in messages %}
         <div style="position: fixed;top: 5%; z-index: 1; width: 98vw; margin: 0 auto; padding: 0 2%;">
             {% if message %}
-            <div class="alert alert-{% if message.tags == 'error' %}danger {% else %}{{ message.tags }} {% endif %} row" role="alert">
+            <div class="alert alert-{% if message.tags == 'error' %}danger {% else %}{{ message.tags }} {% endif %} row"
+                role="alert">
                 <div class="text-left col-6">
                     {{ message }}
                 </div>
@@ -69,7 +71,7 @@
 
 
 
-        {% include 'restorent\components\header.html' %}
+        {% include 'restorent/components/header.html' %}
 
         {% block content %}
 
@@ -98,7 +100,31 @@
     <!-- Template Javascript -->
     <script src="/static/assets/js/main.js"></script>
 
-    
+    <script>
+        function subscribeUser() {
+            navigator.serviceWorker.register("/static/sw.js").then(function(registration) {
+                return registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: "BFpGQtsPz6TP2WKMCJqyvY4DQ751x6JqSEHRdIUcJmxTvuGDpc16qMUW7xvD2a9zdtmmlyS-KVJwC_0xLPoKz4Q="
+                });
+            }).then(function(subscription) {
+                fetch("/webpush/subscribe/", {
+                    method: "POST",
+                    body: JSON.stringify(subscription),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+            });
+        }
+        
+        if ("serviceWorker" in navigator) {
+            subscribeUser();
+        }
+        </script>
+        
+
+
 
 </body>
 

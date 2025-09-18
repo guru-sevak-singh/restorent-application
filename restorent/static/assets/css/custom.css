@@ -25,6 +25,10 @@
 }
 
 /* Additional custom styles if needed */
+body {
+  background-color: #fff !important;
+}
+
 .app-container {
   max-width: 400px;
   margin: auto;
@@ -123,21 +127,32 @@
   border-radius: 10px;
   background-color: green;
   color: white;
-  padding: 20px 10px;
+  padding: 15px 10px;
   text-align: center;
   z-index: 100;
+  margin: 0 auto;
 }
 
+.cart-panel:hover {
+  color: white;
+}
+
+@media (min-width: 1068px) {
+  .cart-panel {
+    width: 50%;
+  }
+}
 @media (max-width: 500px) {
   .nav-item {
     margin-bottom: 15px;
   }
 }
-.cart-item {
-  border: 1px solid #dee2e6;
+.cart-item, .menu-item {
   border-radius: 5px;
   padding: 15px;
   position: relative;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+  background-color: #f7f7f7;
 }
 
 .table-no-to-order {
@@ -182,14 +197,18 @@
 .total-section {
   padding: 15px;
   border-radius: 5px;
-  margin-top: 30px;
-  border-top: 1.5px dashed #ccc !important;
+  margin-top: 10px;
   border: 0px;
 }
 
+@media (min-width: 1100px) {
+  .checkout-btn {
+    min-width: 20%;
+  }
+}
 .checkout-btn {
-  width: 100%;
   margin-top: 20px;
+  margin-left: 10px;
 }
 
 .veg-icon {
@@ -256,14 +275,8 @@
   border: 0px solid;
   border-radius: 10px;
 }
-.dashboard .text-success {
-  color: #1cc88a !important;
-}
 .dashboard .text-primary-custm {
   color: #4e73df !important;
-}
-.dashboard .text-info {
-  color: #36b9cc !important;
 }
 .dashboard .text-warning {
   color: #f6c23e !important;
@@ -286,4 +299,134 @@
 #revenueChart {
   width: 100%; /* Responsive width */
   height: 300px; /* Desired height for the chart */
+}
+
+.screen {
+  background-color: #444;
+  height: 50px;
+  width: 100%;
+  margin: 15px 0;
+  text-align: center;
+  line-height: 50px;
+  color: white;
+}
+
+.seat {
+  border: 1px solid #1ea83c;
+  height: 26px;
+  width: 26px !important;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1ea83c;
+  font-size: 0.7em;
+}
+
+.seat.paymentreceived {
+  color: #fff;
+  background-color: #1ea83c !important;
+  border-color: #1ea83c;
+}
+
+.seat.blank {
+  visibility: hidden;
+}
+
+.seat.orderreceived {
+  background-color: #fea116 !important;
+  color: #fff;
+  border-color: #fea116;
+}
+
+.seat:hover:not(.occupied) {
+  background-color: #ccc;
+}
+
+.info {
+  margin-top: 20px;
+}
+
+.info li {
+  list-style-type: none;
+  display: inline-flex;
+  margin-right: 10px;
+  align-items: center;
+}
+
+.info li .seat {
+  display: inline-block;
+  height: 20px;
+  width: 20px !important;
+}
+
+.row-label {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex: 0;
+  max-width: 50px;
+  min-width: 50px;
+}
+
+.row-label .label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.row.custom-theatre-row {
+  flex-wrap: nowrap;
+}
+
+.cinema {
+  perspective: 13px; /* Gives a 3D perspective to child elements */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.screen-3d {
+  width: 200px;
+  height: 35px;
+  background-color: #e7f0fe;
+  border: 1px solid #bed6fa;
+  border-radius: 10px;
+  box-shadow: 0px 3px 18px rgba(0, 0, 0, 0.19);
+  transform: rotateX(10deg); /* Reduced X rotation for subtler effect */
+  transform-style: preserve-3d;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.screen-3d p {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 5px rgba(255, 255, 255, 0.7);
+  transform: translateZ(25px); /* Text appears to float above the screen */
+}
+
+.screen-3d::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent);
+  border-radius: 10px;
+  transform: translateZ(-8px); /* Adds depth behind the screen */
+}
+
+@media (max-width: 1068px) {
+  .theatreView {
+    overflow-x: auto;
+  }
 }/*# sourceMappingURL=custom.css.map */

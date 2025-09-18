@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary btn-custom" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Add Category</button>
                 </div>
             </form>
@@ -62,7 +62,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary btn-custom" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Update Item</button>
                 </div>
             </form>
@@ -95,7 +95,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-danger">Delete Item</button>
+                    <button type="submit" class="btn btn-secondary">Delete Item</button>
                 </div>
             </form>
         </div>
@@ -105,7 +105,7 @@
 
 
 <!-- Main Content -->
-<div class="container-xxl py-5">
+<div class="container-xxl pb-4 pt-2">
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h5 class="section-title ff-secondary text-center text-primary fw-normal">Add Menu</h5>
@@ -149,7 +149,7 @@
                                             <small class="fst-italic food-description">{{ item.description }}</small>
                                             <div class="row">
                                                 <div class="col-md-12 col-sm-12">
-                                                    <button type="button" class="btn btn-danger btn-sm mt-2"
+                                                    <button type="button" class="btn btn-secondary btn-sm mt-2"
                                                         onclick="DeleteItem('{{item.pk}}')">Delete</button>
                                                     <button type="button" class="btn btn-warning btn-sm mt-2"
                                                         data-bs-toggle="modal" data-bs-target="#addItem"

@@ -508,4 +508,16 @@
 .custom-table th, .custom-table td {
     padding-left: 20px !important;
     padding-right: 20px !important;
-  }/*#
+  }
+  
+
+
+  /* custom css to override bootstrap styyles */
+
+
+@media (min-width: 1400px) {
+    .container, .container-sm, .container-md, .container-lg, .container-xl, .container-xxl {
+        max-width: 100%!important;
+    }
+}
+

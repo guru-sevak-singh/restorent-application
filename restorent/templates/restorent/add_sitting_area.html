@@ -40,9 +40,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary btn-custom" data-bs-dismiss="modal">Close</button>
                     <button type="submit" id="add-submit" name="work" value="add_area" class="btn btn-primary">Add Area</button>
-                    <button type="submit" id="remove-submit" name="work" value="remove_table" class="btn btn-danger">Remove Tables</button>
+                    <button type="submit" id="remove-submit" name="work" value="remove_table" class="btn btn-secondary btn-custom">Remove Tables</button>
                 </div>
             </form>
         </div>
@@ -52,7 +52,7 @@
 
 
 <!-- Table Start Here -->
-<div class="container-xxl py-5">
+<div class="container-xxl pb-4 pt-2">
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h5 class="section-title ff-secondary text-center text-primary fw-normal">Sitting Area</h5>
@@ -83,7 +83,7 @@
                     </div>
 
                     <div class="col-4 col-lg-2 col-md-2">
-                        <button class="table-no-to-order btn-danger text-white border-white" onclick="removeTable('{{floor.pk}}', '{{floor}}')">
+                        <button class="table-no-to-order btn-secondary btn-custom text-white border-white" onclick="removeTable('{{floor.pk}}', '{{floor}}')">
                             Remove Tables
                         </button>
                     </div>

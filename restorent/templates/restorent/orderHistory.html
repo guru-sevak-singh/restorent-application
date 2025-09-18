@@ -23,12 +23,13 @@
                         <label class="col-form-label">
                             Do You Want To Delete This Order !
                         </label>
-                        <input style="display: none;" type="number" class="form-control" id="order-id" name="order-id" value="">
+                        <input style="display: none;" type="number" class="form-control" id="order-id" name="order-id"
+                            value="">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-secondary btn-custom" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Delete</button>
                 </div>
             </form>
         </div>
@@ -37,32 +38,54 @@
 
 
 <!-- Order History Start -->
-<div class="container-xxl py-5">
+<div class="container-xxl pb-4 pt-2">
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h5 class="section-title ff-secondary text-center text-primary fw-normal">Order History</h5>
-            <h1 class="mb-5">Your Previous Orders</h1>
+            <h4 class="mb-5">Your Previous Orders</h4>
         </div>
         <!-- date range picker start -->
         <form>
             <div class="row mb-4">
-                <div class="col-md-10 col-lg-6 col-12">
+                <div class="col-md-12 col-lg-12 col-12">
+                    <div class="shadow-lg bg-white p-3">
                     <div class="row align-items-center g-3">
-                        <div class="col-lg-2 col-md-3 col-12">
-                            <label for="daterange" class="fw-bold">Filter Result</label>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-12">
+                        <div class="col-lg-4 col-md-4 col-12">
+                            <label for="daterange" class="fw-bold">Date Range</label>
                             <div class="input-group">
                                 <span class="input-group-text" id="basic-addon1"> <i class="fa fa-calendar"></i></span>
                                 <input type="text" id="daterange" class="form-control br-2" name="daterange"
                                     aria-label="daterange" aria-describedby="basic-addon1">
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-3 col-12">
 
-                            <button type="submit" class="btn btn-primary"> Submit</button>
+                        {{order_type|json_script:"order-type-value"}}
+                        <div class="col-lg-3 col-md-3 col-12">
+                            <label for="order_type" class="fw-bold">Order Type</label>
+                            <select name="order_type" id="order_type" class="form-control">
+                                <option value="all">All</option>
+                                <option value="delivery">Delivery</option>
+                                <option value="dine-in">Dine-In</option>
+                            </select>
+                        </div>
+                        
+                        {{ payment_status|json_script:"payment-status-value"}}
+                        <div class="col-lg-3 col-md-3 col-12">
+                            <label for="payment_status" class="fw-bold">Payment Type</label>
+                            <select name="payment_status" id="payment_status" class="form-control">
+                                <option value="all">All</option>
+                                <option value="pending">Pending</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+                        
+                        <input type="number" id="page_number" name="page" style="display: none;">
+                        
+                        <div class="col-lg-2 col-md-2 col-12">
+                            <button type="submit" class="btn btn-primary mt-3" id="submit-button"><i class="fa fa-filter me-2"></i>Filter Results</button>
                         </div>
                     </div>
+                </div>
                 </div>
             </div>
         </form>
@@ -82,7 +105,7 @@
                                     S No.
 
                                 </th>
-                                <th scope="col">
+                                <th scope="col" class="w-200">
                                     Time
                                 </th>
                                 <th scope="col" class="text-end">
@@ -91,10 +114,10 @@
                                 <th scope="col" class="text-end">
                                     Quantity
                                 </th>
-                                <th>
+                                <th class="w-140">
                                     Order Type
                                 </th>
-                                <th scope="col">
+                                <th class="w-180" scope="col">
                                     Payment Status
                                 </th>
 
@@ -120,14 +143,14 @@
                                 </td>
                                 <td>
                                     {% if order.normal_table %}
-                                        In-House
+                                    Dine-IN
                                     {% else %}
-                                        Delivery
+                                    Delivery
                                     {% endif %}
                                 </td>
                                 <td>
                                     {% if order.end_time == None %}
-                                    <i class="fa fas fa-clock text-primary mb-0 me-2"></i>Pending</p>
+                                    <i class="fa fas fa-clock text-primary mb-0 me-2"></i>Pending
                                     {% else %}
                                     <i class="fa fas fa-check-circle text-success mb-0 me-1"></i>
                                     Completed
@@ -148,6 +171,52 @@
                         </tbody>
 
                     </table>
+
+                    <nav aria-label="">
+                        <ul class="pagination justify-content-end mb-0">
+                            {% if orders.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" onclick="OpenPage('1')" tabindex="-1">
+                                    <i class="fas fa-angle-left"></i>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+
+                            <li class="page-item">
+                                <a class="page-link" onclick="OpenPage('{{ orders.previous_page_number }}')" tabindex="-1">
+                                    {{ orders.previous_page_number }}
+                                </a>
+                            </li>
+                            {% endif %}
+
+
+                            <li class="page-item active">
+                                <a class="page-link" href="#">{{orders.number}}</a>
+                            </li>
+
+                            {% if orders.has_next %}
+
+                            <li class="page-item">
+                                <a onclick="OpenPage('{{ orders.next_page_number }}')" class="page-link">
+                                    {{ orders.next_page_number}}
+                                </a>
+                            </li>
+
+                            <li class="page-item">
+                                <a onclick="OpenPage('{{ orders.next_page_number }}')" class="page-link">
+                                    <i class="fas fa-angle-right"></i>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+
+                            {% endif %}
+                        </ul>
+                    </nav>
+
+                    <span class="current">
+                        Page {{ orders.number }} of {{ orders.paginator.num_pages }}.
+                    </span>
+
                 </div>
             </div>
 
@@ -164,7 +233,7 @@
 <script>
     const start_date = JSON.parse(document.getElementById('start-date').innerText);
     const end_date = JSON.parse(document.getElementById('end-date').innerText)
-    
+
 
     $(document).ready(function () {
         $('#daterange').daterangepicker({
@@ -189,6 +258,15 @@
     function OpenPopUp(id) {
         $("#deleteOrderPopUp").modal('show');
         document.getElementById('order-id').value = id;
+    }
+
+    document.getElementById('order_type').value = JSON.parse(document.getElementById('order-type-value').innerText);
+    document.getElementById('payment_status').value = JSON.parse(document.getElementById('payment-status-value').innerText);
+
+    function OpenPage(page_number) {
+        page_number = JSON.parse(page_number);
+        document.getElementById('page_number').value = page_number;
+        document.getElementById('submit-button').click();
     }
 
 </script>

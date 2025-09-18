@@ -1,0 +1,226 @@
+{% extends "restorent/base.html" %}
+{% block title %}
+<title>
+    Theatre View
+</title>
+{% endblock %}
+
+{% block content %}
+
+<!-- Modal -->
+<div class="modal fade" id="changeTableStatus" tabindex="-1" aria-labelledby="changeTableStatusLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="changeTableStatusLabel">Table:- <span id="table-name"></span></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <button id="table-status" onclick="ChangeStatus(this)" data-bs-dismiss="modal">
+
+                    </button>
+                    <a class="btn btn-primary" id="url-button">
+                        Open Table
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container text-center theatreView">
+    <h5 class="section-title ff-secondary text-center text-primary fw-normal">Theater Seat Order View</h5>
+    <h5 class="mb-4">Total Pending Orders - 10</h5>
+    <div class="tab-class text-center wow fadeInUp mt-3" data-wow-delay="0.1s">
+        <ul class="nav nav-pills d-inline-flex justify-content-center border-bottom mb-5">
+            <li class="nav-item">
+                <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3 active" data-bs-toggle="pill"
+                    href="#tab1">
+                    <div class="shadow p-3">
+                        <h6 class="mt-n1 mb-0">Hall 1</h6>
+                        <p class="mb-0 text-muted">Order Recieved - <strong class="text-primary fw-bold">6</strong>  </p>
+                    </div>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3" data-bs-toggle="pill" href="#tab2">
+                    <div class="shadow p-3">
+                        <h6 class="mt-n1 mb-0">Hall 2</h6>
+                        <p class="mb-0 text-muted">Order Recieved - <strong class="text-primary">2</strong>  </p>
+                    </div>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3" data-bs-toggle="pill" href="#tab3">
+                    <div class="ps-3">
+                        <div class="shadow p-3">
+                            <h6 class="mt-n1 mb-0">Hall 3</h6>
+                            <p class="mb-0 text-muted">Order Recieved - <strong class="text-primary">12</strong>  </p>
+                        </div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div id="tab1" class="tab-pane fade show p-0 active">
+                <!-- theatre_view -->
+                {% for floor in floors %}
+                <div class="row custom-theatre-row">
+                    <div class="row-label"><span class="label">{{floor}}</span></div>
+                    {% for table in floor.table_set.all|dictsort:"id" %}
+                    {% if table.vacent_status %}
+                    {% if table.payment_panding %}
+                    <div class="seat orderreceived" onclick="ChangeUrl('{{table.pk}}', this)"
+                        id="table-id-{{table.pk}}">
+                        {{floor}}{{forloop.counter}}
+                    </div>
+                    {% else %}
+                    <div class="seat paymentreceived" onclick="ChangeUrl('{{table.pk}}', this)"
+                        id="table-id-{{table.pk}}">
+                        {{floor}}{{forloop.counter}}
+                    </div>
+                    {% endif %}
+                    {% else %}
+                    <div class="seat" onclick="ChangeUrl('{{table.pk}}', this)" id="table-id-{{table.pk}}">
+                        {{floor}}{{forloop.counter}}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+                </div>
+                {% endfor %}
+                <!-- Screen Section -->
+                <div class="cinema">
+                    <div class="screen-3d">
+                    </div>
+
+                </div>
+                <p class="mt-3">
+                    All eyes this way please!
+                </p>
+                <!-- Booking Info -->
+                <ul class="info">
+                    <li><span class="seat"></span> Available Seats - <strong class="ms-2" id="available-seat">0</strong>
+                    </li>
+                    <li class="d-none"><span class="seat paymentreceived"></span>Order and Payment Recieved - <strong
+                            id="paymentreceived-seat" class="ms-2">5</strong></li>
+                    <li><span class="seat orderreceived"></span> Order Received - <strong id="order-seat"
+                            class="ms-2">8</strong>
+                    </li>
+                </ul>
+            </div>
+            <div id="tab2" class="tab-pane fade p-0">
+
+                <!-- theatre_view -->
+                {% for floor in floors %}
+                <div class="row custom-theatre-row">
+                    <div class="row-label"><span class="label">{{floor}}</span></div>
+                    {% for table in floor.table_set.all|dictsort:"id" %}
+                    {% if table.vacent_status %}
+                    {% if table.payment_panding %}
+                    <div class="seat orderreceived" onclick="ChangeUrl('{{table.pk}}', this)"
+                        id="table-id-{{table.pk}}">
+                        {{floor}}{{forloop.counter}}
+                    </div>
+                    {% else %}
+                    <div class="seat paymentreceived" onclick="ChangeUrl('{{table.pk}}', this)"
+                        id="table-id-{{table.pk}}">
+                        {{floor}}{{forloop.counter}}
+                    </div>
+                    {% endif %}
+                    {% else %}
+                    <div class="seat" onclick="ChangeUrl('{{table.pk}}', this)" id="table-id-{{table.pk}}">
+                        {{floor}}{{forloop.counter}}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+                </div>
+                {% endfor %}
+                <!-- Screen Section -->
+                <div class="cinema">
+                    <div class="screen-3d">
+                    </div>
+
+                </div>
+                <p class="mt-3">
+                    All eyes this way please!
+                </p>
+                <!-- Booking Info -->
+                <ul class="info">
+                    <li><span class="seat"></span> Available Seats - <strong class="ms-2" id="available-seat">0</strong>
+                    </li>
+                    <li class="d-none"><span class="seat paymentreceived"></span>Order and Payment Recieved - <strong
+                            id="paymentreceived-seat" class="ms-2">5</strong></li>
+                    <li><span class="seat orderreceived"></span> Order Received - <strong id="order-seat"
+                            class="ms-2">8</strong>
+                    </li>
+                </ul>
+            </div>
+            <div id="tab3" class="tab-pane fade p-0">
+                <!-- theatre_view -->
+                {% for floor in floors %}
+                <div class="row custom-theatre-row">
+                    <div class="row-label"><span class="label">{{floor}}</span></div>
+                    {% for table in floor.table_set.all|dictsort:"id" %}
+                    {% if table.vacent_status %}
+                    {% if table.payment_panding %}
+                    <div class="seat orderreceived" onclick="ChangeUrl('{{table.pk}}', this)"
+                        id="table-id-{{table.pk}}">
+                        {{floor}}{{forloop.counter}}
+                    </div>
+                    {% else %}
+                    <div class="seat paymentreceived" onclick="ChangeUrl('{{table.pk}}', this)"
+                        id="table-id-{{table.pk}}">
+                        {{floor}}{{forloop.counter}}
+                    </div>
+                    {% endif %}
+                    {% else %}
+                    <div class="seat" onclick="ChangeUrl('{{table.pk}}', this)" id="table-id-{{table.pk}}">
+                        {{floor}}{{forloop.counter}}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+                </div>
+                {% endfor %}
+                <!-- Screen Section -->
+                <div class="cinema">
+                    <div class="screen-3d">
+                    </div>
+
+                </div>
+                <p class="mt-3">
+                    All eyes this way please!
+                </p>
+                <!-- Booking Info -->
+                <ul class="info">
+                    <li><span class="seat"></span> Available Seats - <strong class="ms-2" id="available-seat">0</strong>
+                    </li>
+                    <li class="d-none"><span class="seat paymentreceived"></span>Order and Payment Recieved - <strong
+                            id="paymentreceived-seat" class="ms-2">5</strong></li>
+                    <li><span class="seat orderreceived"></span> Order Received - <strong id="order-seat"
+                            class="ms-2">8</strong>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+</div>
+
+<script src="/static/restorent/theatre_view.js"></script>
+
+{% endblock %}

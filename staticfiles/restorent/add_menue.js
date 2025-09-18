@@ -30,3 +30,8 @@ function EditItem(id, button, food_id) {
     
 
 }
+
+function DeleteItem(id) {
+    document.getElementById('deleted-item-id').value = id;
+    $("#deleteItem").modal('show');
+}

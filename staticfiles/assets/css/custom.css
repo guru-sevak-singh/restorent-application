@@ -238,4 +238,52 @@
 .custom-table th, .custom-table td {
   padding-left: 20px !important;
   padding-right: 20px !important;
+}
+
+.dashboard .border-left-info {
+  border-left: 0.25rem solid #36b9cc !important;
+}
+.dashboard .border-left-primary {
+  border-left: 0.25rem solid #4e73df !important;
+}
+.dashboard .border-left-success {
+  border-left: 0.25rem solid #1cc88a !important;
+}
+.dashboard .border-left-warning {
+  border-left: 0.25rem solid #f6c23e !important;
+}
+.dashboard .card {
+  border: 0px solid;
+  border-radius: 10px;
+}
+.dashboard .text-success {
+  color: #1cc88a !important;
+}
+.dashboard .text-primary-custm {
+  color: #4e73df !important;
+}
+.dashboard .text-info {
+  color: #36b9cc !important;
+}
+.dashboard .text-warning {
+  color: #f6c23e !important;
+}
+.dashboard .text-gray-300 {
+  color: #dddfeb !important;
+}
+.dashboard .text-xs {
+  font-size: 0.8rem;
+}
+
+.bg-grey {
+  background-color: #f1f8ff !important;
+}
+
+.form-control:focus {
+  box-shadow: 0px 0px 0px 0px transparent;
+}
+
+#revenueChart {
+  width: 100%; /* Responsive width */
+  height: 300px; /* Desired height for the chart */
 }/*# sourceMappingURL=custom.css.map */

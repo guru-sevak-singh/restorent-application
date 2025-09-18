@@ -38,6 +38,15 @@ function submitForm() {
 
 }
 
+function ShowOldOrders() {
+    invalids = document.getElementsByClassName('is-valid');
+    if (invalids.length == 3) {
+        button = document.getElementById('show-old-orders')
+        button.type = 'submit';
+        button.click()
+    }
+}
+
 let nameInput = document.getElementById('name');
 nameInput.addEventListener('change', (e) => {
     let user_name = e.target.value;

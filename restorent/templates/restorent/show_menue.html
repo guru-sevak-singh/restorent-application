@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<div class="container-xxl py-5">
+<div class="container-xxl pb-4 pt-2">
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h5 class="section-title ff-secondary text-center text-primary fw-normal">Our Menu</h5>
@@ -47,7 +47,7 @@
                     <div id="tab-{{forloop.counter}}" class="tab-pane fade show p-0">
                         {% endif %}
 
-                        <div class="row">
+                        <div class="row mb-5">
                             {% for food_item in food_catogery.fooditem_set.all %}
                             <div class="col-lg-6 col-sm-6" id="item-id-{{food_item.pk}}">
                                 <div class="d-flex align-items-center menu-item">
@@ -56,8 +56,8 @@
                                     <div class="w-100 d-flex flex-column text-start ps-4">
                                         <span class="item-pk" style="display: none;">{{food_item.pk}}</span>
                                         <h5 class="d-flex justify-content-between border-bottom pb-2">
-                                            <span><span class="{{food_item.food_type}}-icon item-type"></span><span
-                                                    class="item-name">{{food_item}}</span></span>
+                                            <span class="{{food_item.food_type}}-icon item-type"></span><span
+                                                    class="item-name">{{food_item}}</span>
                                             <span class="text-primary">₹<span
                                                     class="item-price">{{food_item.price}}</span></span>
                                         </h5>

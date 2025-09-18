@@ -45,12 +45,14 @@ class PaymentForm(forms.ModelForm):
 class UpdateRestorentDetail(forms.ModelForm):
     class Meta:
         model = Restorent
-        fields = ['name', 'owner_name', 'address', 'upi_id']
+        fields = ['name', 'owner_name', 'address', 'upi_id', 'notification_token', 'type']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'owner_name': forms.TextInput(attrs={'class': 'form-control'}),
             'address': forms.TextInput(attrs={'class': 'form-control'}),
             'upi_id': forms.TextInput(attrs={'class': 'form-control'}),
+            'notification_token': forms.TextInput(attrs={'class': 'form-control'}),
+            'type': forms.Select(attrs={'class': 'form-control'})
         }
 
 class AddTax(forms.ModelForm):
@@ -65,11 +67,11 @@ class AddTax(forms.ModelForm):
 class RestorentForm(forms.Form):
     restorent_name = forms.CharField(
         max_length=100,
-        label='Restorent Name',
+        label='Restaurent Name',
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
     address = forms.CharField(
-        label='Restrorent Address',
+        label='Restaurent Address',
         widget=forms.Textarea(attrs={'class': 'form-control'})
     )
     name = forms.CharField(

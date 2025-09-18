@@ -1,0 +1,105 @@
+{% extends 'restorent/base.html' %}
+
+{% block title %}
+<title>
+    Order History
+</title>
+{% endblock %}
+
+{% block content %}
+
+
+<!-- Order History Start -->
+<div class="container-xxl pb-4 pt-2">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h5 class="section-title ff-secondary text-center text-primary fw-normal">Order History</h5>
+            <h1 class="mb-5">Your Previous Orders</h1>
+        </div>
+
+        <div id="order-list" class="row">
+
+
+            <div class="container-fluid">
+
+
+                <div class="table-responsive">
+                    <table class="table custom-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    S No.
+
+                                </th>
+                                <th scope="col">
+                                    Time
+                                </th>
+                                <th scope="col" class="text-end">
+                                    Amount
+                                </th>
+                                <th scope="col" class="text-end">
+                                    Quantity
+                                </th>
+                                <th scope="col">
+                                    Order Type
+                                </th>
+                                <th scope="col">
+                                    Payment Status
+                                </th>
+
+                                <th scope="col">
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <th scope="row">
+                                    {{forloop.counter}}
+                                </th>
+                                <td>
+                                    {{order.start_time}}
+                                </td>
+                                <td class="text-end">
+                                    ₹ {{order.order_amount}}
+                                </td>
+                                <td class="text-end">
+                                    {{order.items.count}}
+                                </td>
+                                <td>
+                                    {% if order.normal_table %}
+                                    Dine-IN
+                                    {% else %}
+                                    Delivery
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if order.end_time == None %}
+                                    <i class="fa fas fa-clock text-primary mb-0 me-2"></i>Pending
+                                    {% else %}
+                                    <i class="fa fas fa-check-circle text-success mb-0 me-1"></i>
+                                    Completed
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <a href="{% url 'restorent:order_profile' order.id %}"> <i
+                                            class="fas fa-eye text-primary"></i></a>
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+{% endblock %}

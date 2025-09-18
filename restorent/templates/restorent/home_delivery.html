@@ -11,9 +11,13 @@
     data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form>
+            <form action="{% url 'restorent:show_old_orders' restorent.pk %}"
+            method="post"
+            >
+            {% csrf_token %}
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="detailBoxLabel">User Information</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
@@ -24,7 +28,7 @@
 
                     <div class="col-md-12 mt-2">
                         <label for="phone-number" class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" id="phone-number" required>
+                        <input type="text" name="phone-number" class="form-control" id="phone-number" required>
 
                     </div>
 
@@ -36,6 +40,7 @@
 
                 </div>
                 <div class="modal-footer">
+                    <button type="button" id="show-old-orders" class="btn btn-secondary btn-custom" onclick="ShowOldOrders()">Show Old Orders</button>
                     <button type="button" class="btn btn-primary" onclick="submitForm()">proceed Order</button>
                 </div>
             </form>
@@ -43,7 +48,7 @@
     </div>
 </div>
 
-<div class="container-xxl py-5">
+<div class="container-xxl pb-4 pt-2">
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h5 class="section-title ff-secondary text-center text-primary fw-normal">Our Menu</h5>
@@ -84,20 +89,20 @@
                     <div id="tab-{{forloop.counter}}" class="tab-pane fade show p-0">
                         {% endif %}
 
-                        <div class="row">
+                        <div class="row mb-5">
                             {% for food_item in food_catogery.fooditem_set.all %}
                             <div class="col-lg-6 col-sm-6">
                                 <div class="d-flex align-items-center menu-item">
                                     <img class="flex-shrink-0 img-fluid rounded" src="{{food_item.food_image.url}}"
-                                        alt="" style="width: 80px;">
+                                        alt="" style="width: 60px;">
                                     <div class="w-100 d-flex flex-column text-start ps-4">
                                         <span class="item-pk" style="display: none;">{{food_item.pk}}</span>
-                                        <h5 class="d-flex justify-content-between border-bottom pb-2">
-                                            <span><span class="{{food_item.food_type}}-icon item-type"></span><span
-                                                    class="item-name">{{food_item}}</span></span>
+                                        <div class="d-flex justify-content-between border-bottom pb-2">
+                                            <h5 class="d-flex text-capitalize"><span class="{{food_item.food_type}}-icon item-type"></span><span
+                                                    class="item-name">{{food_item}}</span></h5>
                                             <span class="text-primary">₹<span
                                                     class="item-price">{{food_item.price}}</span></span>
-                                        </h5>
+                                            </div>
                                         <small class="fst-italic item-description">
                                             {{food_item.description}}
                                         </small>
@@ -150,7 +155,7 @@
                             id="cart-amount">0</span></p>
                 </div>
                 <div class="col">
-                    <p class="mb-0">View Cart <i class="bi bi-chevron-right ms-2"></i></p>
+                    <p class="mb-0 text-end">View Cart <i class="bi bi-chevron-right ms-2"></i></p>
                 </div>
             </div>
 

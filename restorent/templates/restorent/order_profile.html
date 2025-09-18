@@ -8,7 +8,7 @@
 {% block content %}
 
 <!-- Tabs Start -->
-<div class="container-xxl py-5">
+<div class="container-xxl pb-4 pt-2">
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h5 class="section-title ff-secondary text-center text-primary fw-normal">Order Summary</h5>
@@ -89,31 +89,10 @@
                         </div>
 
 
-
-                        {% if order.normal_table == False %}
-                        <div class="d-flex justify-content-between">
-                            <p class="text-muted">Delivery To</p>
-                            <h6>{{order.name}}</h6>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <p class="text-muted">Address</p>
-                            <h6>{{order.address}}</h6>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <p class="text-muted">Phone Number</p>
-                            <h6>{{ order.phone_number }}</h6>
-                        </div>
-
-                        {% else %}
-
-
                         <div class="d-flex justify-content-between">
                             <p class="text-muted">Table No.</p>
                             <h6 id="table-name">{{order.table.floor}}-{{table_number}}</h6>
                         </div>
-
-                        {% endif %}
-
 
                         <div class="d-flex justify-content-between">
                             <p class="text-muted">Order Date</p>
@@ -224,8 +203,8 @@
                         <div class="d-flex justify-content-between">
                             <p class="text-muted">Adjustmented Amount</p>
                             <h6 class="total-amount">₹
-                                <span id="adjustment-amount" data-bs-target="#adjustmentPopup"
-                                data-bs-toggle="modal" class="text-primary" style="cursor: pointer;">
+                                <span id="adjustment-amount" data-bs-target="#adjustmentPopup" data-bs-toggle="modal"
+                                    class="text-primary" style="cursor: pointer;">
                                     {{ order.adjustment }}
                                 </span>
 
@@ -342,7 +321,7 @@
                     {% endfor %}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary btn-custom" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Add
                         Payment</button>
                 </div>

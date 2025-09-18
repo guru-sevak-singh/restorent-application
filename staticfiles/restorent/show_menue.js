@@ -1,14 +1,38 @@
 const table_name = document.getElementById('table-name').innerText;
-localStorage.setItem(table_name, '{}')
+let temp = localStorage.getItem(table_name)
+if (temp == null) {
+    localStorage.setItem(table_name, '{}')
+}
+else {
+    showOldData()
+}
+
+function showOldData() {
+    let all_items = JSON.parse(temp);
+    
+    for (let i in all_items) {
+        // tet the table id
+        let tab_id = `item-id-${i}`
+        // get the card
+        let card = document.getElementById(tab_id);
+        // make the item
+        let active_tab = card.getElementsByClassName('menu-item')[0];
+        // make the item highlight
+        active_tab.classList.add('active');
+        // make add box d-none
+        card.getElementsByClassName('add-box')[0].classList.add('d-none');
+        // remove remove box d-none
+        card.getElementsByClassName('remove-box')[0].classList.remove('d-none');
+        // set Quantity 1
+        card.getElementsByClassName('quantity')[0].innerText = all_items[i]['quantity'];
+    }
+}
 
 function addToCart(btn) {
-
     // adding the active class to complet card
     btn.parentElement.parentElement.parentElement.parentElement.classList.add('active')
-
     // getting the card so we can get the item details
     card = btn.parentElement.parentElement.parentElement.parentElement
-
     // fetching the details from card
     item_name = card.getElementsByClassName('item-name')[0].innerText;
     item_type = card.getElementsByClassName('item-type')[0].classList.value
@@ -16,7 +40,6 @@ function addToCart(btn) {
     item_price = card.getElementsByClassName('item-price')[0].innerText;
     item_description = card.getElementsByClassName('item-description')[0].innerText;
     pk = card.getElementsByClassName('item-pk')[0].innerText;
-
     // creating data to save in local storage
     append_data = {}
     append_data['item_type'] = item_type
@@ -24,29 +47,21 @@ function addToCart(btn) {
     append_data['item_price'] = item_price;
     append_data['item_description'] = item_description;
     append_data.quantity = 1;
-
     // make add box d-none
     card.getElementsByClassName('add-box')[0].classList.add('d-none')
-
     // remove remove box d-none
     card.getElementsByClassName('remove-box')[0].classList.remove('d-none')
-
     // set Quantity 1
     card.getElementsByClassName('quantity')[0].innerText = 1
-
     // getting the data from local storage
     cart_data = localStorage.getItem(table_name)
-
     // making the data readbale
     cart_data = JSON.parse(cart_data)
-
     // updating the data
     cart_data[pk] = append_data
     json_data = JSON.stringify(cart_data)
-
     // saving new data to local storage
     localStorage.setItem(table_name, json_data)
-
     // updating the cart lenght
     UpdateCart()
 
@@ -164,10 +179,18 @@ function removeItem(btn) {
 
 
 function UpdateCart() {
+
     // getting the data of this table
     let cart_data = localStorage.getItem(table_name);
     cart_data = JSON.parse(cart_data);
     let cart_length = Object.keys(cart_data).length;
+
+    if (cart_length == 0) {
+        document.getElementById('cart-div').style.display = 'none';
+    }
+    else {
+        document.getElementById('cart-div').style.display = 'block';
+    }
     document.getElementById('cart-length').innerText = cart_length;
 
     getCartAmount(cart_data)
